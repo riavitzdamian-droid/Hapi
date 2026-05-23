@@ -2507,7 +2507,7 @@ function IntroStep({ onNext }) {
   const accent = ACCENTS.intro;
   return (
     <Shell stepId="intro">
-      <div className="flex flex-col justify-center pb-8" style={{ minHeight: "calc(100dvh - 80px)" }}>
+      <div className="flex flex-col pb-8 pt-8">
         <div className="mb-8">
           <h1 className="font-bold mb-1" style={{ fontSize: 42, color: WHITE, fontFamily: "'Georgia', serif", letterSpacing: "-1px", lineHeight: 1.1 }}>
             hapi
@@ -2516,7 +2516,7 @@ function IntroStep({ onNext }) {
         </div>
 
         {/* Carta de presentación — completa */}
-        <div className="overflow-y-auto mb-6" style={{ maxHeight: "340px" }}>
+        <div className="mb-6">
           <p className="text-xs font-semibold mb-4" style={{ color: accent, letterSpacing: "1.5px" }}>POR QUÉ EXISTE HAPI</p>
 
           <p className="text-sm leading-relaxed mb-4" style={{ color: "rgba(255,255,255,0.75)" }}>
