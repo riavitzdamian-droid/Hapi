@@ -2418,7 +2418,7 @@ function buildProfile(answers) {
 const HapiMark = ({ size = 32 }) => (
   <svg width={size} height={size} viewBox="0 0 60 60" fill="none">
     <circle cx="30" cy="30" r="30" fill="url(#hg)"/>
-    <path d="M20 38 Q20 22 30 22 Q40 22 40 38" stroke="white" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+    <path d="M19 37 Q24 43 30 43 Q36 43 41 37" stroke="white" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
     <circle cx="30" cy="18" r="3" fill="white"/>
     <defs>
       <linearGradient id="hg" x1="0" y1="0" x2="60" y2="60">
