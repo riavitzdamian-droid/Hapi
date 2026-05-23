@@ -4234,7 +4234,7 @@ export default function HapiApp() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "x-api-key": "TU_API_KEY_AQUI",
+            "x-api-key": "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",
             "anthropic-version": "2023-06-01",
             "anthropic-dangerous-direct-browser-access": "true",
           },
