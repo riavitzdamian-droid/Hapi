@@ -4361,11 +4361,19 @@ export default function HapiApp() {
   }
 
   // ── Main app ─────────────────────────────────────────────────
+  // Detectar si es móvil real (no simulado en PC)
+  const isMobile = window.innerWidth <= 430;
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen" style={{ background: "#040810" }}>
       <div ref={appScrollRef} className="relative flex flex-col overflow-hidden"
-        style={{ width: "375px", height: "812px", borderRadius: "44px", background: "#080E18",
-          boxShadow: "0 0 0 10px #0A1020, 0 30px 80px rgba(0,0,0,0.9)" }}>
+        style={{
+          width: isMobile ? "100vw" : "375px",
+          height: isMobile ? "100dvh" : "812px",
+          borderRadius: isMobile ? 0 : "44px",
+          background: "#080E18",
+          boxShadow: isMobile ? "none" : "0 0 0 10px #0A1020, 0 30px 80px rgba(0,0,0,0.9)",
+        }}>
 
         <div className="absolute top-0 left-0 right-0 h-64 pointer-events-none"
           style={{ background: "radial-gradient(ellipse at 50% 0%,rgba(107,168,212,0.07) 0%,transparent 70%)" }}/>
