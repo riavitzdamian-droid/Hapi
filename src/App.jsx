@@ -2069,10 +2069,7 @@ function HapiLogo({ size=28 }) {
     <svg width={size} height={size} viewBox="0 0 60 60" fill="none">
       {/* círculo verde sólido */}
       <circle cx="30" cy="30" r="30" fill="#7ECBA1"/>
-      {/* ojos — líneas horizontales cortas, ligeramente inclinadas */}
-      <line x1="19" y1="25" x2="25" y2="24" stroke="#0F1E14" strokeWidth="2.8" strokeLinecap="round"/>
-      <line x1="35" y1="24" x2="41" y2="25" stroke="#0F1E14" strokeWidth="2.8" strokeLinecap="round"/>
-      {/* sonrisa — curva suave, un poco asimétrica */}
+      <circle cx="30" cy="25" r="3" fill="#0F1E14"/>
       <path d="M19 37 Q24 43 30 43 Q36 43 41 37" stroke="#0F1E14" strokeWidth="2.8" fill="none" strokeLinecap="round"/>
     </svg>
   );
@@ -2418,7 +2415,7 @@ function buildProfile(answers) {
 const HapiMark = ({ size = 32 }) => (
   <svg width={size} height={size} viewBox="0 0 60 60" fill="none">
     <circle cx="30" cy="30" r="30" fill="url(#hg)"/>
-    <path d="M19 37 Q24 43 30 43 Q36 43 41 37" stroke="white" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+    <path d="M20 38 Q20 22 30 22 Q40 22 40 38" stroke="white" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
     <circle cx="30" cy="18" r="3" fill="white"/>
     <defs>
       <linearGradient id="hg" x1="0" y1="0" x2="60" y2="60">
@@ -2431,7 +2428,7 @@ const HapiMark = ({ size = 32 }) => (
 function Shell({ stepId, children, footer }) {
   const accent = ACCENTS[stepId] || "#7ECBA1";
   return (
-    <div className="flex flex-col h-full relative overflow-hidden" style={{ background: BG }}>
+    <div className="flex flex-col relative" style={{ background: BG, minHeight: "100dvh" }}>
       <div className="absolute top-0 left-0 right-0 h-72 pointer-events-none"
         style={{ background: `radial-gradient(ellipse at 50% 0%, ${accent}40 0%, transparent 70%)`, opacity: 0.25 }}/>
       <div className="flex items-center gap-2.5 px-6 pt-12 pb-0 z-10 flex-shrink-0">
@@ -2510,7 +2507,7 @@ function IntroStep({ onNext }) {
   const accent = ACCENTS.intro;
   return (
     <Shell stepId="intro">
-      <div className="flex flex-col justify-center h-full pb-8">
+      <div className="flex flex-col justify-center pb-8" style={{ minHeight: "calc(100dvh - 80px)" }}>
         <div className="mb-8">
           <h1 className="font-bold mb-1" style={{ fontSize: 42, color: WHITE, fontFamily: "'Georgia', serif", letterSpacing: "-1px", lineHeight: 1.1 }}>
             hapi
@@ -2613,7 +2610,7 @@ function SplashStep({ onNext, nombre }) {
   const accent = ACCENTS.welcome;
   return (
     <Shell stepId="welcome">
-      <div className="flex flex-col justify-center h-full pb-8">
+      <div className="flex flex-col justify-center pb-8" style={{ minHeight: "calc(100dvh - 80px)" }}>
         <div className="mb-10">
           <h1 className="font-bold mb-1" style={{ fontSize: 42, color: WHITE, fontFamily: "'Georgia', serif", letterSpacing: "-1px", lineHeight: 1.1 }}>
             hapi
@@ -4342,7 +4339,7 @@ export default function HapiApp() {
   // ── Onboarding shell ─────────────────────────────────────────
   if (screen === "onboarding") {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen" style={{ background: "#050D15" }}>
+      <div className="flex flex-col items-center" style={{ background: "#050D15", minHeight: "100dvh" }}>
         {stepIdx > 0 && (
           <button onClick={() => { setStepIdx(0); setAnswers({}); localStorage.removeItem("hapi_state_v1"); }}
             className="text-xs px-4 py-2 rounded-xl mb-3"
@@ -4351,28 +4348,27 @@ export default function HapiApp() {
           </button>
         )}
         <div className="relative flex flex-col overflow-hidden"
-          style={{ width: "375px", height: "812px", borderRadius: "44px", background: "#0A1220",
-            boxShadow: "0 0 0 10px #1A1A2E, 0 30px 80px rgba(0,0,0,0.8)" }}>
+          style={{
+            width: "100%",
+            maxWidth: "430px",
+            minHeight: "100dvh",
+            background: "#0A1220",
+          }}>
           {renderOnboardingStep()}
-          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-28 h-1 rounded-full opacity-20" style={{ background: "white" }}/>
         </div>
       </div>
     );
   }
 
   // ── Main app ─────────────────────────────────────────────────
-  // Detectar si es móvil real (no simulado en PC)
-  const isMobile = window.innerWidth <= 430;
-
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen" style={{ background: "#040810" }}>
-      <div ref={appScrollRef} className="relative flex flex-col overflow-hidden"
+    <div className="flex flex-col items-center" style={{ background: "#040810", minHeight: "100dvh" }}>
+      <div ref={appScrollRef} className="relative flex flex-col"
         style={{
-          width: isMobile ? "100vw" : "375px",
-          height: isMobile ? "100dvh" : "812px",
-          borderRadius: isMobile ? 0 : "44px",
+          width: "100%",
+          maxWidth: "430px",
+          minHeight: "100dvh",
           background: "#080E18",
-          boxShadow: isMobile ? "none" : "0 0 0 10px #0A1020, 0 30px 80px rgba(0,0,0,0.9)",
         }}>
 
         <div className="absolute top-0 left-0 right-0 h-64 pointer-events-none"
