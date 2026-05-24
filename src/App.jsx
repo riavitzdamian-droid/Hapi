@@ -2966,6 +2966,7 @@ REGLAS DE GENERACIÓN — FASE 2
 - La práctica puede ser la misma si es fundamental al módulo, o una variante — pero siempre adaptada al estado del check-in del día. Los pasos deben ser detallados y guiados, no telegráficos.
 - Si la energía es baja (1-2) o el ánimo es "cansado", simplificá la práctica al mínimo efectivo.
 - Si el foco es "alto" y la energía es 4-5, podés ir más profundo.
+- NUNCA menciones los valores del check-in en el texto generado. No escribas "tenés energía 3", "tu foco es alto", "estás calmo", ni ninguna referencia explícita a los números o etiquetas del check-in. Usá esa información para calibrar el tono y la profundidad, pero que nunca aparezca en el texto como dato leído.
 - Las preguntas de cierre son siempre nuevas — nunca las mismas que el módulo original.
 - Extensión total: 5-7 min de lectura. Rico y sustancioso, no denso. El usuario vino a integrar, no a repasar.
 - Cada sección debe tener el doble o triple de desarrollo que una primera lectura. Este es el trabajo profundo.
@@ -2975,7 +2976,7 @@ ESTRUCTURA DE SALIDA — RESPONDER SOLO EN JSON VÁLIDO, SIN BACKTICKS NI TEXTO 
   "titulo_sesion": "título evocador para esta sesión de integración, máx 6 palabras",
   "nuevo_angulo": {
     "label": "etiqueta corta del ángulo, ej: 'Otra forma de verlo', máx 4 palabras",
-    "texto": "el concepto central del módulo explicado desde un ángulo nuevo. Desarrollá la idea con profundidad real: un ejemplo cotidiano concreto, una segunda vuelta que profundice, y una conexión inesperada con la vida del usuario. Mínimo 250 palabras. Nunca repetir ejemplos del módulo original.",
+    "texto": "el concepto central del módulo explicado desde un ángulo nuevo. Desarrollá la idea con profundidad real: un ejemplo cotidiano concreto, una segunda vuelta que profundice, y una conexión inesperada con la vida del usuario. Mínimo 250 palabras. Nunca repetir ejemplos del módulo original. IMPORTANTE: separar cada párrafo con \\n\\n para que se rendericen correctamente.",
     "idea_clave": "la idea más poderosa de este nuevo ángulo, en 2-3 frases. Con sustancia real, sin adornos."
   },
   "practica": {
@@ -2987,7 +2988,7 @@ ESTRUCTURA DE SALIDA — RESPONDER SOLO EN JSON VÁLIDO, SIN BACKTICKS NI TEXTO 
     "cierre": "pregunta de autoconocimiento genuina al finalizar, nueva y profunda, máx 25 palabras",
     "cierre_diferido": "una segunda pregunta para reflexionar 2-3 días después, cuando el cuerpo haya procesado la práctica, máx 25 palabras"
   },
-  "insight": "conexión profunda entre el estado de hoy, el módulo y el momento de vida del usuario. Mínimo 150 palabras. Honesto, no azucarado. Que conecte puntos que el usuario no había conectado solo."
+  "insight": "conexión profunda entre el estado de hoy, el módulo y el momento de vida del usuario. Mínimo 150 palabras. Honesto, no azucarado. Que conecte puntos que el usuario no había conectado solo. IMPORTANTE: separar cada párrafo con \\n\\n para que se rendericen correctamente."
 }`;
 }
 
@@ -3761,9 +3762,11 @@ function PracticaDiaria({ rutinas, modulosSeleccionados, checkin, onVolver, onNu
             </p>
           </div>
           <div style={{ padding: "14px 15px" }}>
-            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.8)", margin: "0 0 12px", lineHeight: 1.65, fontFamily: "system-ui" }}>
-              {rutina.nuevo_angulo.texto}
-            </p>
+            {rutina.nuevo_angulo.texto.split("\n\n").map((parrafo, i, arr) => (
+              <p key={i} style={{ fontSize: 13, color: "rgba(255,255,255,0.8)", margin: i < arr.length - 1 ? "0 0 12px" : "0 0 12px", lineHeight: 1.65, fontFamily: "system-ui" }}>
+                {parrafo}
+              </p>
+            ))}
             <div style={{ padding: "11px 13px", borderRadius: 10, background: `${accent}08`, border: `1px solid ${accent}18` }}>
               <p style={{ fontSize: 13, color: WHITE, margin: 0, lineHeight: 1.5, fontFamily: "'Georgia', serif", fontStyle: "italic" }}>
                 "{rutina.nuevo_angulo.idea_clave}"
@@ -3871,9 +3874,11 @@ function PracticaDiaria({ rutinas, modulosSeleccionados, checkin, onVolver, onNu
             <p style={{ fontSize: 9, letterSpacing: "2px", color: MUTED, margin: "0 0 9px", fontFamily: "system-ui", fontWeight: 600 }}>
               INSIGHT DE HOY
             </p>
-            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.78)", margin: 0, lineHeight: 1.7, fontFamily: "system-ui" }}>
-              {rutina.insight}
-            </p>
+            {rutina.insight.split("\n\n").map((parrafo, i, arr) => (
+              <p key={i} style={{ fontSize: 13, color: "rgba(255,255,255,0.78)", margin: i < arr.length - 1 ? "0 0 12px" : 0, lineHeight: 1.7, fontFamily: "system-ui" }}>
+                {parrafo}
+              </p>
+            ))}
           </div>
         )}
 
