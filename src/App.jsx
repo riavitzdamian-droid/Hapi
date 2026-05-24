@@ -3750,6 +3750,7 @@ function PracticaDiaria({ rutinas, modulosSeleccionados, checkin, onVolver, onNu
 
         {/* PÁGINA 1 — Nuevo ángulo */}
         {paginaIdx === 0 && (
+        <>
         <div style={{ borderRadius: 14, background: CARD, border: `1px solid ${BORDER}`, overflow: "hidden" }}>
           <div style={{ padding: "13px 15px", background: `linear-gradient(135deg, ${accent}12, transparent)`, borderBottom: `1px solid ${BORDER}` }}>
             <p style={{ fontSize: 9, letterSpacing: "2px", color: accent, margin: "0 0 2px", fontFamily: "system-ui", fontWeight: 600 }}>
@@ -3779,6 +3780,7 @@ function PracticaDiaria({ rutinas, modulosSeleccionados, checkin, onVolver, onNu
         }}>
           Continuar a la práctica →
         </button>
+        </>
         )}
 
         {/* PÁGINA 2 — Práctica */}
