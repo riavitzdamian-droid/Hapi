@@ -3785,6 +3785,7 @@ function PracticaDiaria({ rutinas, modulosSeleccionados, checkin, onVolver, onNu
 
         {/* PÁGINA 2 — Práctica */}
         {paginaIdx === 1 && (
+        <>
         <div style={{ borderRadius: 14, background: CARD, border: `1px solid ${BORDER}`, overflow: "hidden" }}>
           <div style={{ padding: "13px 15px", background: `linear-gradient(135deg, ${accent}10, transparent)`, borderBottom: `1px solid ${BORDER}`, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <div>
@@ -3858,6 +3859,7 @@ function PracticaDiaria({ rutinas, modulosSeleccionados, checkin, onVolver, onNu
         }}>
           Continuar al insight →
         </button>
+        </>
         )}
 
         {/* PÁGINA 3 — Insight + Cierre */}
