@@ -3648,17 +3648,23 @@ function LoadingIA({ modulosSeleccionados, progreso }) {
 // ─── SESIÓN GENERADA — FORMATO 3 BLOQUES ─────────────────────
 function PracticaDiaria({ rutinas, modulosSeleccionados, checkin, onVolver, onNuevaSesion }) {
   const [sesionIdx, setSesionIdx] = useState(0);
+  const [paginaIdx, setPaginaIdx] = useState(0); // 0=angulo, 1=practica, 2=insight
   const [pasoActivo, setPasoActivo] = useState(null);
   const [completada, setCompletada] = useState(false);
   const scrollRef = useRef(null);
 
-  // Scroll al top al montar y al cambiar de sesión
-  useEffect(() => { scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" }); }, [sesionIdx]);
+  useEffect(() => { scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" }); }, [sesionIdx, paginaIdx]);
 
   const irASesion = (idx) => {
     setSesionIdx(idx);
+    setPaginaIdx(0);
     setPasoActivo(null);
     setCompletada(false);
+  };
+
+  const irAPagina = (idx) => {
+    setPaginaIdx(idx);
+    setPasoActivo(null);
   };
 
   const moduloNum = modulosSeleccionados[sesionIdx];
@@ -3686,6 +3692,22 @@ function PracticaDiaria({ rutinas, modulosSeleccionados, checkin, onVolver, onNu
           </svg>
           Mi camino
         </button>
+
+        {/* Barra de páginas de la sesión */}
+        <div style={{ display: "flex", gap: 5, marginBottom: 8 }}>
+          {["Nuevo ángulo", "Práctica", "Insight"].map((label, i) => (
+            <button key={i} onClick={() => irAPagina(i)} style={{
+              flex: 1, padding: "5px 4px", borderRadius: 8, border: "none",
+              background: i === paginaIdx ? `${accent}20` : "transparent",
+              cursor: "pointer",
+            }}>
+              <div style={{ height: 3, borderRadius: 4, background: i <= paginaIdx ? accent : DIM, marginBottom: 4 }}/>
+              <p style={{ fontSize: 9, color: i === paginaIdx ? accent : MUTED, margin: 0, fontFamily: "system-ui", fontWeight: 600, letterSpacing: "0.5px" }}>
+                {label.toUpperCase()}
+              </p>
+            </button>
+          ))}
+        </div>
 
         {/* Indicador de sesiones múltiples */}
         {totalSesiones > 1 && (
@@ -3726,7 +3748,8 @@ function PracticaDiaria({ rutinas, modulosSeleccionados, checkin, onVolver, onNu
 
       <div style={{ padding: "0 24px", display: "flex", flexDirection: "column", gap: 14 }}>
 
-        {/* BLOQUE 1 — Nuevo ángulo */}
+        {/* PÁGINA 1 — Nuevo ángulo */}
+        {paginaIdx === 0 && (
         <div style={{ borderRadius: 14, background: CARD, border: `1px solid ${BORDER}`, overflow: "hidden" }}>
           <div style={{ padding: "13px 15px", background: `linear-gradient(135deg, ${accent}12, transparent)`, borderBottom: `1px solid ${BORDER}` }}>
             <p style={{ fontSize: 9, letterSpacing: "2px", color: accent, margin: "0 0 2px", fontFamily: "system-ui", fontWeight: 600 }}>
@@ -3748,7 +3771,18 @@ function PracticaDiaria({ rutinas, modulosSeleccionados, checkin, onVolver, onNu
           </div>
         </div>
 
-        {/* BLOQUE 2 — Práctica */}
+        {/* Botón continuar página 1 */}
+        <button onClick={() => irAPagina(1)} style={{
+          width: "100%", padding: "14px", borderRadius: 12, border: "none",
+          background: accent, color: "#080E18",
+          fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "system-ui",
+        }}>
+          Continuar a la práctica →
+        </button>
+        )}
+
+        {/* PÁGINA 2 — Práctica */}
+        {paginaIdx === 1 && (
         <div style={{ borderRadius: 14, background: CARD, border: `1px solid ${BORDER}`, overflow: "hidden" }}>
           <div style={{ padding: "13px 15px", background: `linear-gradient(135deg, ${accent}10, transparent)`, borderBottom: `1px solid ${BORDER}`, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <div>
@@ -3814,6 +3848,19 @@ function PracticaDiaria({ rutinas, modulosSeleccionados, checkin, onVolver, onNu
           </div>
         </div>
 
+        {/* Botón continuar página 2 */}
+        <button onClick={() => irAPagina(2)} style={{
+          width: "100%", padding: "14px", borderRadius: 12, border: "none",
+          background: accent, color: "#080E18",
+          fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "system-ui",
+        }}>
+          Continuar al insight →
+        </button>
+        )}
+
+        {/* PÁGINA 3 — Insight + Cierre */}
+        {paginaIdx === 2 && (
+          <>
         {/* Insight */}
         {rutina.insight && (
           <div style={{ padding: "15px 16px", borderRadius: 14, background: CARD, border: `1px solid ${BORDER}` }}>
@@ -3847,6 +3894,7 @@ function PracticaDiaria({ rutinas, modulosSeleccionados, checkin, onVolver, onNu
           ))}
         </div>
 
+        {/* Navegación entre sesiones */}
         {/* Navegación entre sesiones */}
         <div style={{ display: "flex", gap: 10 }}>
           {sesionIdx > 0 && (
@@ -3887,12 +3935,569 @@ function PracticaDiaria({ rutinas, modulosSeleccionados, checkin, onVolver, onNu
         <p style={{ textAlign: "center", fontSize: 11, color: DIM, margin: 0, fontFamily: "'Georgia', serif", fontStyle: "italic" }}>
           hapi · vivir consciente
         </p>
+          </>
+        )}
       </div>
     </div>
   );
 }
 
 // ─── HOME VIEW ────────────────────────────────────────────────
+
+// ─── EXPLORAR — CONTENIDO ─────────────────────────────────────
+const EXPLORAR_ITEMS = [
+  {
+    id: "modestia",
+    titulo: "La modestia",
+    categoria: "Conciencia · Equilibrio",
+    tiempo: "5 min",
+    color: "#A8C49A",
+    paginas: [
+      {
+        label: "INTRODUCCIÓN",
+        titulo: "La modestia no es lo que parece",
+        cuerpo: "Vivimos en una época que confunde visibilidad con valor. Las redes sociales premian al que más ocupa espacio. El sistema económico necesita que queramos más de lo que tenemos. Y sin darnos cuenta, aprendemos a construir una identidad hacia afuera — para ser vistos, para ser reconocidos, para demostrar quiénes somos.\n\nLa modestia, en ese contexto, parece una desventaja. Casi una ingenuidad.\n\nPero hay algo que la sabiduría antigua enseña desde hace siglos y que la psicología moderna empieza a confirmar: quien necesita demostrar quién es, todavía no sabe quién es.",
+      },
+      {
+        label: "DESARROLLO",
+        titulo: "La modestia real es interior",
+        cuerpo: "Hay una confusión frecuente que vale la pena desarmar. La modestia no es falsa humildad. No es hacerse menos de lo que uno es. No es negar los propios logros ni vivir en la carencia. Eso no es modestia — es otro tipo de desequilibrio, igual de problemático.\n\nLa modestia real es un estado de quien sabe lo que tiene y no necesita mostrarlo. Es la diferencia entre el que entra al salón anunciándose y el que llega, se sienta atrás, y escucha — porque tiene algo real para aprender.\n\nHay una historia que ilustra esto: un hombre asistía regularmente a unas clases, siempre sentado al final del aula, tomando notas en silencio. Al final del curso se descubre que era uno de los grandes jefes de investigación oncológica de Europa. Sin chapa. Sin primera fila. Sin necesidad de que nadie supiera quién era. Eso es la modestia hecha carne.",
+      },
+      {
+        label: "DESARROLLO",
+        titulo: "El ego desequilibrado",
+        cuerpo: "El ego desequilibrado no viene de la soberbia sino de la baja autoestima. Quien se jacta, quien necesita la primera fila, quien construye su identidad en lo que tiene o en lo que logró, lo hace porque en algún lugar profundo no está seguro de quién es sin eso. El ruido externo tapa el silencio interno.\n\nEl modesto, en cambio, no necesita expandirse porque sabe lo que tiene. Los que necesitan expandirse son los que tienen que mostrar la potencia.\n\nHay un camino concreto hacia la modestia: el agradecimiento. Cuando agradecés algo genuinamente, lo estás valorando. Y quien valora lo que tiene no siente la urgencia de acumular lo que no tiene. El agradecimiento — no como ritual sino como forma de mirar — te ancla en lo real.",
+      },
+      {
+        label: "REFLEXIÓN",
+        titulo: "Para llevar",
+        idea_clave: "La modestia no es hacerse pequeño. Es no necesitar hacerse grande.",
+        reflexion: [
+          "¿Hay algún área de tu vida donde sentís que necesitás demostrar algo — a otros o a vos mismo? ¿Qué estarías demostrando exactamente?",
+          "¿Cuándo fue la última vez que agradeciste genuinamente algo cotidiano — no por obligación sino porque lo viste de verdad?",
+          "¿Hay algo que hacés, tenés o buscás principalmente por lo que dice de vos hacia afuera? ¿Qué pasaría si nadie lo viera?",
+        ],
+      },
+    ],
+  },
+  {
+    id: "vacio",
+    titulo: "Vacío existencial",
+    categoria: "Conciencia · Propósito",
+    tiempo: "5 min",
+    color: "#9B8EC4",
+    paginas: [
+      {
+        label: "INTRODUCCIÓN",
+        titulo: "El vacío no es el problema",
+        cuerpo: "Hay un momento que casi todos conocen pero pocos nombran. Un domingo a la tarde sin planes. Un viaje largo terminado. Un logro alcanzado que no trajo lo que prometía. Un silencio entre una cosa y la siguiente.\n\nAparece algo incómodo. Una especie de pregunta sin forma que no sabés cómo responder. Y la respuesta automática suele ser la misma: llenarlo. Rápido. Con lo que sea.\n\nEso que sentís tiene nombre. Y entenderlo cambia bastante la relación con uno mismo.\n\nLa primera cosa que vale la pena invertir es la percepción: el vacío no es una falla. Es una función. Todo lo que existe tiene vacío porque el vacío es lo que permite recibir. El vacío existencial no es una señal de que algo está roto. Es una señal de que hay un espacio disponible que todavía no encontró para qué sirve.",
+      },
+      {
+        label: "DESARROLLO",
+        titulo: "Dos formas de responder al vacío",
+        cuerpo: "Cuando aparece el vacío, hay básicamente dos respuestas posibles.\n\nLa primera es la evasión. Llenarlo con cualquier cosa — actividad, consumo, ruido, vínculos que ocupan espacio sin nutrir. Moverse mucho para no quedarse quieto con la pregunta. Hay una anécdota que ilustra esto: un hombre corre desesperado por la calle. Alguien le pregunta a dónde va. \"Buscando trabajo\", responde. \"¿Y si el trabajo quedó atrás?\", le dice el otro. \"Entonces te estás escapando, no buscando.\"\n\nMucha gente vive así. Se mueve sin saber hacia dónde. Y lo que parece productividad es en realidad una huida del silencio.\n\nLa segunda respuesta es la conciencia. Quedarse con el vacío el tiempo suficiente para preguntarse qué está pidiendo. Porque el vacío existencial, cuando no se tapa sino que se habita, eventualmente revela algo: el sentido.",
+      },
+      {
+        label: "DESARROLLO",
+        titulo: "El sentido como respuesta real",
+        cuerpo: "La pandemia mostró algo con claridad: la gente que \"no tenía tiempo\" tuvo de repente 24 horas para estar consigo misma. Y muchos se encontraron con algo inesperado: no sabían qué hacer con ese tiempo. El ruido que antes tapaba la pregunta desapareció, y la pregunta quedó sola en el centro.\n\nAlgunos salieron transformados. Otros, cuando terminó, volvieron a las corridas exactamente donde las habían dejado.\n\nEl vacío existencial no desaparece. Sigue ahí. Pero cuando una persona encuentra el sentido de su vida — lo que la mueve de verdad, lo que haría aunque nadie la mirara — ese vacío deja de ser amenaza y se convierte en motor. La felicidad, en este sentido, no es un estado emocional. Es la sensación de que el vacío que uno tiene está siendo llenado con lo que vino a llenar.",
+      },
+      {
+        label: "REFLEXIÓN",
+        titulo: "Para llevar",
+        idea_clave: "El vacío no es lo que le falta a tu vida. Es el espacio que espera ser llenado con lo que realmente importa.",
+        reflexion: [
+          "¿Cuándo aparece el vacío en tu vida? ¿En qué momentos, situaciones o transiciones lo sentís con más fuerza?",
+          "Cuando sentís ese vacío, ¿cuál es tu respuesta automática? ¿Lo tapás o te quedás con él?",
+          "¿Hay algo que hacés — o que podrías hacer — que llena ese espacio sin que lo sientas como evasión?",
+        ],
+      },
+    ],
+  },
+  {
+    id: "autoestima",
+    titulo: "Autoestima",
+    categoria: "Conciencia · Relaciones",
+    tiempo: "5 min",
+    color: "#7ECBA1",
+    paginas: [
+      {
+        label: "INTRODUCCIÓN",
+        titulo: "Amá a tu prójimo como a vos mismo",
+        cuerpo: "Hay una frase que casi todos conocemos: amá a tu prójimo como a vos mismo. La solemos leer como una instrucción hacia afuera — sé generoso, sé compasivo con otros.\n\nPero hay una parte que se pasa por alto: como a vos mismo. La calidad del amor que podés dar afuera depende directamente de cómo te tratás adentro.\n\nY ahí aparece una pregunta incómoda: ¿cómo te tratás a vos mismo, realmente?\n\nHay una paradoja que vale la pena entender: la alta autoestima, cuando es exagerada, es también baja autoestima. El narcisismo no viene de quererse demasiado. Viene de no quererse lo suficiente. Quien necesita que todos sepan quién es, está compensando algo que internamente no está resuelto. No hay alta ni baja. Hay autoestima equilibrada — o desequilibrada en cualquiera de sus dos direcciones.",
+      },
+      {
+        label: "DESARROLLO",
+        titulo: "Reconocer sin exaltar",
+        cuerpo: "Hay una distinción que cambia bastante la forma de relacionarse con uno mismo: la diferencia entre reconocer las propias virtudes y exaltarlas.\n\nReconocer es ver con honestidad lo que uno tiene — las fortalezas reales, las capacidades genuinas, lo que funciona bien. Es necesario. Sin ese reconocimiento, uno no puede potenciar lo que tiene ni usarlo para trabajar lo que falta.\n\nExaltar es otra cosa. Es inflar, mostrar, hacer bandera. Ahí sí puede aparecer el ego en el sentido problemático.\n\nHay una tendencia cultural a enfocarse casi exclusivamente en los desequilibrios propios como \"oportunidades de mejora\" — y es correcto, lo son. Pero las virtudes también son oportunidades. Dejarlas sin desarrollar porque \"ya las tengo\" es desperdiciar la mitad del trabajo.\n\nEl equilibrio está en mirar a ambos lados con la misma honestidad: defectos con compasión, virtudes con reconocimiento.",
+      },
+      {
+        label: "DESARROLLO",
+        titulo: "La señal más clara",
+        cuerpo: "Una parte importante de la autoestima fue construida desde afuera — por las voces que escuchaste durante los años en que todavía no tenías criterio propio para filtrarlas. Alguien que te dijo que no podías. Esas voces se instalan y con el tiempo se vuelven propias.\n\nEl trabajo de la autoestima, en parte, es distinguir entre esas voces heredadas y la propia evaluación honesta de quién sos.\n\nLa autoestima equilibrada se construye sobre una sola base: la honestidad radical con uno mismo. No la honestidad social — esa que cuida la imagen que otros tienen de vos. Sino la que se ejerce puertas adentro, sin público.\n\n¿Cómo saber si la autoestima está en un lugar sano? Hay una señal concreta: la paz interior que no se modifica por el exterior. Quien la tiene puede recibir críticas sin derrumbarse y elogios sin inflarse. No porque sea indiferente, sino porque su base no depende de lo que el exterior confirme en cada momento.",
+      },
+      {
+        label: "REFLEXIÓN",
+        titulo: "Para llevar",
+        idea_clave: "No podés dar lo que no te das. La calidad de cómo te tratás a vos mismo define la calidad de cómo tratás a todo lo demás.",
+        reflexion: [
+          "¿Cómo sos con vos mismo cuando cometés un error? ¿Le hablarías a alguien que querés de la misma forma que te hablás a vos?",
+          "¿Podés nombrar tres virtudes propias genuinas — no las que otros te dicen, sino las que vos reconocés? ¿Las estás desarrollando activamente?",
+          "¿Hay alguna voz heredada — de alguien del pasado — que todavía opera como tuya? ¿Qué diría tu propia evaluación honesta en su lugar?",
+        ],
+      },
+    ],
+  },
+  {
+    id: "perfeccionismo",
+    titulo: "Perfeccionismo",
+    categoria: "Mente · Conciencia",
+    tiempo: "5 min",
+    color: "#E07B6A",
+    paginas: [
+      {
+        label: "INTRODUCCIÓN",
+        titulo: "El detalle que se come el todo",
+        cuerpo: "El perfeccionismo tiene buena prensa. Se presenta como dedicación, como estándares altos, como el motor de los que no se conforman con poco.\n\nPero hay algo que vale la pena mirar más de cerca: el perfeccionismo no siempre empuja hacia adelante. Muchas veces paraliza, agota y, paradójicamente, aleja del resultado que supuestamente busca.\n\nHay un tipo particular de perfeccionismo que se disfraza de rigor: ir a los detalles con tanta profundidad que en algún punto se pierde de vista el conjunto. Los detalles son infinitos. Cuanto más se desciende en ellos sin anclar en los principios generales, más se pierde el entendimiento real de lo que se está analizando.\n\nCitar no es integrar. Acumular referencias no es comprender. La profundidad real requiere que quien analiza aparezca en el análisis.",
+      },
+      {
+        label: "DESARROLLO",
+        titulo: "La vara que siempre sube",
+        cuerpo: "El perfeccionismo tiene una característica que lo hace especialmente agotador: la vara siempre sube.\n\nSacaste ocho — la vara pasa a nueve. Sacaste nueve — la vara pasa a diez. Llegaste a diez — era lo mínimo esperado, no hay celebración. La vara se mueve antes de que puedas celebrar haber llegado.\n\nEn ese esquema, la persona nunca está en el nivel que debería estar. Y eso tiene un costo real en la autoestima: la sensación acumulada de no ser suficiente, de que el esfuerzo nunca es el correcto, de que algo siempre falla.\n\nHay una diferencia importante entre estimular y presionar. Estimular celebra lo logrado y abre el camino al siguiente paso. Presionar ignora lo logrado y señala siempre lo que faltó.\n\nUna de las confusiones más frecuentes del perfeccionismo es mezclar responsabilidad con culpa. La responsabilidad dice: hago lo que puedo dentro de lo que soy. La culpa dice: no llegué donde debía llegar. El antídoto no es bajar los estándares. Es aplicar compasión al propio proceso.",
+      },
+      {
+        label: "DESARROLLO",
+        titulo: "El otro extremo",
+        cuerpo: "El perfeccionismo es un desequilibrio por exceso. Pero hay un desequilibrio equivalente en la dirección opuesta: la falta de estructura.\n\nHay personas que invierten mucha energía a lo largo de los años y al final sienten que no llegaron a nada. No porque no hayan hecho esfuerzo — sino porque nunca tuvieron claro a dónde querían llegar ni cómo organizar el camino hacia ahí.\n\nLa disciplina y la organización no son lo contrario de la creatividad. Son lo que permite que la energía disponible vaya a algún lado en lugar de dispersarse. Sin estructura, el movimiento es real pero la dirección es azarosa.\n\nLos dos extremos — el perfeccionismo paralizante y la desorganización dispersa — tienen en común que impiden avanzar. Uno por sobrecontrol, el otro por falta de él.",
+      },
+      {
+        label: "REFLEXIÓN",
+        titulo: "Para llevar",
+        idea_clave: "El perfeccionismo no eleva el resultado. Eleva la vara hasta que ningún resultado alcanza.",
+        reflexion: [
+          "¿Hay alguna área de tu vida donde la autoexigencia opera más como condena que como estímulo? ¿Qué pasaría si celebraras lo que lograste antes de pasar al siguiente paso?",
+          "Cuando algo no sale como esperabas, ¿qué diferencia hacés entre responsabilidad y culpa? ¿Cómo te hablás en ese momento?",
+          "¿Tu nivel de detalle en lo que hacés te acerca a entender el conjunto o te aleja de él?",
+        ],
+      },
+    ],
+  },
+  {
+    id: "soledad",
+    titulo: "La soledad",
+    categoria: "Conciencia · Relaciones",
+    tiempo: "6 min",
+    color: "#6BA8D4",
+    paginas: [
+      {
+        label: "INTRODUCCIÓN",
+        titulo: "Dos formas de estar solo",
+        cuerpo: "Hay dos formas de estar solo. Una que nutre. Otra que agota.\n\nLa diferencia no está en la cantidad de tiempo que pasás a solas — está en lo que encontrás cuando el ruido externo desaparece y quedás frente a vos mismo.\n\nLa soledad positiva no es la ausencia de gente. Es la presencia con uno mismo que permite procesar, reflexionar y crecer desde adentro.\n\nLa soledad negativa tampoco es la ausencia de gente. Es la huida hacia adentro para no tener que confrontar con el exterior — o la sensación de vacío que aparece cuando no sabés qué hacer con el silencio.\n\nHay un detalle importante: el miedo a la soledad no es miedo a estar solo. Es miedo a lo que aparece cuando estás solo. La soledad no genera ese malestar — lo revela.",
+      },
+      {
+        label: "DESARROLLO",
+        titulo: "Lo que no querés ver",
+        cuerpo: "Cuando alguien llena su agenda compulsivamente, cuando necesita estar rodeado de gente constantemente, cuando el silencio le resulta insoportable — no está huyendo de la soledad. Está huyendo de la información que la soledad trae.\n\nEsa información puede ser una relación que no funciona y que no querés terminar. Un camino que elegiste y que en el silencio ya no te convence. Una conversación que venís postergando.\n\nEl problema de huir de esa información es que no desaparece. Sigue ahí, insistiendo, golpeando de otras formas — ansiedad difusa, irritabilidad sin causa clara, sensación de que algo falta sin saber qué.\n\nLa práctica no es forzarse a estar solo. Es no huir de lo que aparece cuando el espacio se abre.",
+      },
+      {
+        label: "DESARROLLO",
+        titulo: "El equilibrio",
+        cuerpo: "Hay una trampa más sutil: creer que estás bien solo cuando en realidad estás evitando el compromiso con los demás. Una persona que está genuinamente bien con su propia compañía también puede estar bien acompañada. Si alguien dice que prefiere la soledad pero se siente mal en compañía — hay algo que no cierra.\n\nLos otros — pareja, amigos, familia — funcionan como espejos que muestran cosas que la introspección sola no puede mostrar. Hay aspectos de uno mismo que solo se revelan en el roce con otro.\n\nNi la soledad permanente ni la socialización permanente. Los dos extremos sirven para lo mismo: evitar algo. El movimiento sano es entre los dos — soledad que procesa la experiencia externa, y vínculos que generan nueva experiencia para procesar.",
+      },
+      {
+        label: "REFLEXIÓN",
+        titulo: "Para llevar",
+        idea_clave: "No le tenés miedo a la soledad. Le tenés miedo a lo que encontrás cuando estás solo. Y eso que encontrás es exactamente lo que necesitás ver.",
+        reflexion: [
+          "Cuando tenés tiempo libre y silencio, ¿qué es lo primero que aparece? ¿Lo buscás o lo evitás?",
+          "¿Hay algo que venís postergando mirar — una situación, una relación, una decisión — que aparece cuando el ruido externo baja?",
+          "¿Usás la compañía de otros para aprender sobre vos mismo, o principalmente para no estar solo?",
+        ],
+      },
+    ],
+  },
+  {
+    id: "velocidad",
+    titulo: "Velocidad y proceso",
+    categoria: "Conciencia · Mente",
+    tiempo: "5 min",
+    color: "#C4A882",
+    paginas: [
+      {
+        label: "INTRODUCCIÓN",
+        titulo: "La trampa de lo inmediato",
+        cuerpo: "Vivimos convencidos de que movernos más rápido es avanzar más. Que la productividad se mide en cuánto se hace por unidad de tiempo. Que el que para, pierde.\n\nHay una paradoja que vale la pena considerar: la velocidad constante no es avance. Es, en muchos casos, parálisis con movimiento.\n\nLa cultura actual tiene un sesgo muy claro hacia los resultados inmediatos. Se quiere ver el efecto antes de terminar la causa. Se abandona el proceso si el resultado tarda. Se juzga el valor de algo por la rapidez con que produce un retorno visible.\n\nEl problema es que los procesos que realmente cambian algo — los aprendizajes profundos, los cambios de perspectiva, la construcción de una identidad sólida — no producen resultados visibles en el corto plazo. Son lentos. Silenciosos. Y ocurren principalmente adentro.",
+      },
+      {
+        label: "DESARROLLO",
+        titulo: "La velocidad como censura invisible",
+        cuerpo: "Hay algo que pocas veces se nombra así: la velocidad del sistema moderno funciona como una forma de censura que no necesita prohibir nada.\n\nEn otros tiempos, quien quería que la gente no pensara tenía que quemar libros, perseguir intelectuales, prohibir ideas. Hoy no hace falta. Alcanza con saturar la atención — con estímulos, notificaciones, urgencias permanentes — hasta que el tiempo y la energía para la reflexión profunda simplemente desaparecen.\n\nNo es que se prohíbe leer. Es que no hay tiempo para leer. No es que se prohíbe pensar. Es que el ritmo no deja espacio para pensar.\n\nUna buena metáfora: la información superficial viaja por tuberías delgadas — mucho movimiento, poco volumen. Los procesos profundos viajan por tuberías anchas — aparentemente más lentos, pero transportando infinitamente más.",
+      },
+      {
+        label: "DESARROLLO",
+        titulo: "El valor del proceso",
+        cuerpo: "La mente quiere resultados tangibles. Es su forma de confirmar que algo está pasando, que el esfuerzo vale. Y eso no está mal — necesitamos esa confirmación para sostenernos en el camino.\n\nPero hay un tipo de resultado que la mente suele ignorar porque no es visible ni medible: el cambio de percepción interior. La manera en que uno lee una situación que antes no podía leer. La calma que aparece donde antes había reactividad.\n\nSi querés saber quién sos, mirá tu agenda. La distribución del tiempo no es un detalle logístico. Es una declaración de identidad. Lo que uno elige hacer con el tiempo disponible refleja qué se está construyendo realmente.\n\nHay una diferencia entre el tiempo que se invierte en profundizar — leer, reflexionar, practicar, estar presente — y el tiempo que se consume en la superficie sin dejar nada.",
+      },
+      {
+        label: "REFLEXIÓN",
+        titulo: "Para llevar",
+        idea_clave: "Frenar no es perder velocidad. Es elegir el tipo de movimiento que realmente lleva a algún lado.",
+        reflexion: [
+          "Si mirás tu semana típica, ¿qué proporción del tiempo va hacia actividades que te generan algo duradero versus actividades que simplemente llenan el espacio?",
+          "¿Hay algún proceso en tu vida que estás abandonando porque los resultados tardan? ¿Qué pasaría si lo mirarás desde una escala de tiempo más larga?",
+          "¿Cuándo fue la última vez que te diste tiempo para pensar sin un objetivo concreto — solo para que algo sedimentara?",
+        ],
+      },
+    ],
+  },
+  {
+    id: "bullying",
+    titulo: "Bullying",
+    categoria: "Conciencia · Relaciones",
+    tiempo: "6 min",
+    color: "#D4886A",
+    paginas: [
+      {
+        label: "INTRODUCCIÓN",
+        titulo: "El ángulo que falta",
+        cuerpo: "Cuando se habla de bullying, el foco casi siempre está en la víctima — cómo protegerla, cómo fortalecerla, cómo reducir el daño. Es necesario. Pero no es suficiente para ir a la raíz del problema.\n\nLa pregunta que pocas veces se hace es la más importante: ¿cómo crece un acosador? ¿De dónde viene esa conducta? ¿Qué está pasando en esa persona — y en su entorno — para que el daño hacia otro se convierta en algo que busca activamente?\n\nEntender al acosador no es justificarlo. Es desarticular el mal en su origen.",
+      },
+      {
+        label: "DESARROLLO",
+        titulo: "El grupo y el chivo expiatorio",
+        cuerpo: "Una de las primeras cosas que llama la atención cuando se analiza el bullying es que rara vez es individual. Casi siempre hay un grupo.\n\nEl grupo cumple una función muy específica: le da al acosador una sensación de fuerza que por sí solo no tiene. Dentro del grupo hay pertenencia, hay jerarquía, hay un líder que decide quién está adentro y quién afuera. Y para mantener esa cohesión interna, el grupo necesita un afuera — alguien a quien señalar, discriminar, atacar.\n\nEl acosado no es elegido al azar. Es elegido por algo que lo diferencia. Cualquier característica que lo haga destacar o distinguirse puede convertirse en blanco. Lo que se persigue es exactamente la diferencia — la singularidad, lo que no encaja en el molde del grupo.\n\nEsto tiene una dimensión que va más allá de la escuela. El acoso escolar comparte estructura con los sistemas totalitarios: un líder, un grupo cerrado, un enemigo externo que justifica la cohesión interna. El bullying es el germen de dinámicas mucho más oscuras que aparecen en la vida adulta.",
+      },
+      {
+        label: "DESARROLLO",
+        titulo: "La raíz: inferioridad compensada",
+        cuerpo: "El acosador no actúa desde la fuerza. Actúa desde la debilidad disfrazada de fuerza.\n\nEn el fondo de casi todo comportamiento agresivo sostenido hay una baja autoestima profunda, una sensación de inferioridad que no puede sostenerse sola y necesita compensarse hacia afuera. Al señalar al otro como inferior, el acosador temporalmente alivia esa sensación propia de no ser suficiente.\n\nToda agresión que apunta a construir superioridad sobre otro está revelando, en realidad, una inferioridad que no se sabe procesar de otra manera.\n\nY esa dinámica no nace en el patio del colegio. Nace antes. En la mayoría de los casos hay un entorno familiar — no necesariamente con violencia física visible — donde hay agresión psicológica, liderazgos autoritarios, dinámicas de control o humillación que el niño internaliza y reproduce. Los acosadores no nacen de la nada. Aprenden.",
+      },
+      {
+        label: "REFLEXIÓN",
+        titulo: "Para llevar",
+        idea_clave: "Quien necesita hacer sentir inferior a otro está revelando la inferioridad que no sabe cómo sostener adentro.",
+        reflexion: [
+          "¿Hubo algún momento en tu vida donde actuaste desde la necesidad de pertenecer a un grupo a costa de alguien que quedaba afuera? ¿Qué te impulsaba en ese momento?",
+          "Cuando ves comportamientos agresivos o de exclusión en otros, ¿podés ver la debilidad detrás de la agresión? ¿Cambia algo en cómo respondés?",
+          "¿Hay algún patrón de tu entorno familiar de origen que todavía influye en cómo manejás el poder en tus relaciones actuales?",
+        ],
+      },
+    ],
+  },
+  {
+    id: "idealizacion",
+    titulo: "Idealización",
+    categoria: "Conciencia · Relaciones",
+    tiempo: "5 min",
+    color: "#8EC4B8",
+    paginas: [
+      {
+        label: "INTRODUCCIÓN",
+        titulo: "Admirar vs. idealizar",
+        cuerpo: "Admirar a alguien es sano. Reconocer en otro una cualidad que vale la pena, aprender de quien sabe más, sentir respeto genuino por alguien que encarna algo que uno valora — todo eso es parte de crecer.\n\nIdealizar es otra cosa. Y la diferencia importa más de lo que parece.\n\nQuien admira mantiene la conciencia de que el admirado es un ser humano con defectos. Quien idealiza borra esa conciencia. En la idealización, todo lo que hace el otro está bien. Sus errores se justifican, sus contradicciones se ignoran, su figura se vuelve intocable.\n\nEl problema no es el admirado — el problema es lo que el que idealiza necesita que el otro sea. Porque la idealización no dice nada sobre el ídolo. Dice todo sobre quien idealiza.",
+      },
+      {
+        label: "DESARROLLO",
+        titulo: "Lo que el ídolo satisface",
+        cuerpo: "¿Qué necesita la persona que idealiza? En general, deposita en el otro algo que no puede encontrar en sí misma — una referencia, una seguridad, una respuesta que no tiene. El ídolo se convierte en un objeto que satisface una necesidad propia.\n\nY cuando el ídolo falla — porque tarde o temprano todo ser humano falla — la caída es brutal, porque lo que cae no era una persona real sino una proyección.\n\nHay algo interesante en la tradición bíblica al respecto: ninguno de sus personajes centrales es idealizado. Moisés, el rey David, Abraham — todos tienen contradicciones, errores, momentos de duda o de falla. No se puede idealizar a ninguno. La enseñanza de fondo es que la figura humana, por más grande que sea, sigue siendo humana.",
+      },
+      {
+        label: "DESARROLLO",
+        titulo: "La relación bidireccional",
+        cuerpo: "Hay un lado de esta ecuación que pocas veces se examina: el del idealizado.\n\nCuando alguien es idealizado y lo acepta — cuando entra en el juego de creerse la imagen que otros le proyectan — hay un segundo desequilibrio en marcha. El ídolo que se cree ídolo necesita esa idealización para sostenerse. Su autoestima depende de que otros lo vean como algo más que humano.\n\nSe forma así una relación de dos desequilibrios que se alimentan mutuamente: uno necesita idealizar, el otro necesita ser idealizado. Ninguno de los dos está viendo al otro — están usando al otro para resolver algo propio.\n\nEsta dinámica no es exclusiva de las relaciones personales. Los sistemas totalitarios se construyen exactamente sobre este mecanismo: el líder que acepta y promueve su propia divinización, y la masa que necesita creer en alguien infalible para no tener que hacerse cargo de su propia vida.",
+      },
+      {
+        label: "REFLEXIÓN",
+        titulo: "Para llevar",
+        idea_clave: "La idealización no dice nada sobre el ídolo. Dice todo sobre lo que quien idealiza todavía no encontró en sí mismo.",
+        reflexion: [
+          "¿Hay alguien en tu vida — o en tu historia — a quien hayas idealizado? ¿Qué necesitabas que esa persona fuera para vos?",
+          "¿Podés distinguir en vos mismo la diferencia entre admirar a alguien y necesitar que sea perfecto? ¿Qué cambia cuando el admirado comete un error?",
+          "¿Hay algún ámbito donde buscás figuras de autoridad que te den certeza en lugar de construir tu propio criterio?",
+        ],
+      },
+    ],
+  },
+  {
+    id: "celos",
+    titulo: "Celos",
+    categoria: "Conciencia · Relaciones",
+    tiempo: "5 min",
+    color: "#C4829A",
+    paginas: [
+      {
+        label: "INTRODUCCIÓN",
+        titulo: "No todos los celos son iguales",
+        cuerpo: "Los celos son una de las emociones más universales y menos comprendidas. Casi todos los han sentido en algún momento. Pocos los examinan con honestidad.\n\nHay una distinción que vale la pena hacer desde el principio: no todos los celos son iguales. Hay celos que son una respuesta natural dentro de un vínculo de compromiso, y hay celos que son un problema en sí mismos — un patrón que destruye lo que dice querer proteger.\n\nUna sensación de incomodidad cuando alguien cercano presta atención a otro, cuando algo que sentís como propio parece amenazado — eso tiene una lógica humana. El problema empieza cuando ese celo se convierte en control. Cuando la necesidad de controlar los movimientos del otro se vuelve más grande que la capacidad de confiar en él.",
+      },
+      {
+        label: "DESARROLLO",
+        titulo: "La inseguridad como raíz",
+        cuerpo: "Los celos patológicos casi nunca son sobre el otro. Son sobre uno mismo.\n\nEn el fondo hay una creencia muy específica, generalmente no consciente: no soy suficiente. No soy suficientemente interesante, atractivo, valioso — la versión varía, pero el núcleo es el mismo. Y si no soy suficiente, entonces el otro en algún momento va a darse cuenta y va a elegir a alguien mejor.\n\nEsa creencia no nace de la nada. Puede venir de experiencias tempranas de abandono real o percibido. Puede venir de haber crecido en un entorno donde el afecto era condicional, donde había que ganarse el amor siendo de cierta manera. Puede venir de una traición real en el pasado que nunca terminó de procesarse.\n\nLo que sea que haya generado esa herida, el resultado es el mismo: una persona que entra a los vínculos con la convicción de que no va a durar. Y desde esa convicción, cualquier señal ambigua del exterior se lee como confirmación de la amenaza — aunque no lo sea.",
+      },
+      {
+        label: "DESARROLLO",
+        titulo: "Lo que el otro no puede dar",
+        cuerpo: "La lógica del celoso patológico es comprensible pero circular: si el miedo es que el otro se vaya, la solución aparente es controlarlo para que no pueda irse. Revisar el teléfono. Preguntar dónde estuvo. Vigilar.\n\nEl problema es que el control no toca la raíz. Calma la ansiedad por unos minutos — el otro está donde dijo que estaría — pero la creencia de fondo sigue intacta. No soy suficiente. Y si esa creencia sigue ahí, el próximo motivo de sospecha llega solo.\n\nHay algo que el celoso busca en el control del otro que el otro no puede dar: la seguridad de que es valioso. El otro puede decir mil veces 'te quiero, no hay nadie más' — y la tranquilidad dura horas antes de que el miedo vuelva. Porque la fuente del problema no está en lo que el otro hace o deja de hacer. Está en lo que uno cree de sí mismo.\n\nLos celos patológicos no protegen el vínculo. Lo asfixian. Y hay una paradoja que los hace especialmente destructivos: terminan produciendo exactamente lo que temen. La persona controlada, vigilada, interrogada permanentemente, eventualmente se aleja. Los celos expulsan a quien dicen querer retener.",
+      },
+      {
+        label: "REFLEXIÓN",
+        titulo: "Para llevar",
+        idea_clave: "Los celos no son sobre el otro. Son el espejo de lo que uno todavía no resolvió sobre sí mismo.",
+        reflexion: [
+          "Cuando sentís celos, ¿podés identificar la creencia que está debajo? ¿Qué es exactamente lo que temés que el otro descubra de vos?",
+          "¿Hay una experiencia pasada — de abandono, de traición, de amor condicional — que todavía influye en cómo te relacionás hoy? ¿La reconocés como pasado o la vivís como presente?",
+          "¿Qué necesitaría pasar adentro tuyo para que la presencia del otro alcanzara — sin necesitar verificarla constantemente?",
+        ],
+      },
+    ],
+  },
+];
+
+
+// ─── LECTOR PAGINADO — EXPLORAR ───────────────────────────────
+function LectorPaginado({ item, onBack }) {
+  const [paginaIdx, setPaginaIdx] = useState(0);
+  const scrollRef = useRef(null);
+  const pagina = item.paginas[paginaIdx];
+  const total = item.paginas.length;
+  const esReflexion = pagina.reflexion != null;
+
+  useEffect(() => {
+    scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+  }, [paginaIdx]);
+
+  return (
+    <div ref={scrollRef} className="flex-1 overflow-y-auto pb-24">
+      {/* Header */}
+      <div style={{
+        padding: "44px 24px 20px",
+        background: `linear-gradient(180deg, ${item.color}12 0%, transparent 100%)`,
+      }}>
+        <button onClick={onBack} style={{
+          display: "flex", alignItems: "center", gap: 6,
+          fontSize: 12, color: MUTED, background: "none", border: "none",
+          cursor: "pointer", marginBottom: 16, fontFamily: "system-ui",
+        }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <polyline points="15 18 9 12 15 6"/>
+          </svg>
+          Explorar
+        </button>
+
+        {/* Progreso de páginas */}
+        <div style={{ display: "flex", gap: 5, marginBottom: 16 }}>
+          {item.paginas.map((_, i) => (
+            <div key={i} style={{
+              flex: 1, height: 3, borderRadius: 4,
+              background: i <= paginaIdx ? item.color : DIM,
+              transition: "background 0.3s",
+            }}/>
+          ))}
+        </div>
+
+        <p style={{ fontSize: 10, letterSpacing: "2px", color: item.color, margin: "0 0 6px", fontFamily: "system-ui", fontWeight: 600 }}>
+          {pagina.label} · {paginaIdx + 1}/{total}
+        </p>
+        <h1 style={{ fontSize: 22, fontWeight: 700, color: WHITE, margin: 0, fontFamily: "'Georgia', serif", lineHeight: 1.3 }}>
+          {pagina.titulo}
+        </h1>
+      </div>
+
+      <div style={{ padding: "0 24px", display: "flex", flexDirection: "column", gap: 16 }}>
+
+        {/* Contenido de la página */}
+        {!esReflexion ? (
+          <div style={{
+            padding: "18px",
+            borderRadius: 14,
+            background: CARD,
+            border: `1px solid ${BORDER}`,
+          }}>
+            {pagina.cuerpo.split("\n\n").map((parrafo, i) => (
+              <p key={i} style={{
+                fontSize: 15,
+                color: "rgba(255,255,255,0.82)",
+                lineHeight: 1.75,
+                fontFamily: "system-ui",
+                marginBottom: i < pagina.cuerpo.split("\n\n").length - 1 ? 14 : 0,
+              }}>
+                {parrafo}
+              </p>
+            ))}
+          </div>
+        ) : (
+          <>
+            {/* Idea clave */}
+            <div style={{
+              padding: "18px",
+              borderRadius: 14,
+              background: `${item.color}10`,
+              border: `1px solid ${item.color}30`,
+            }}>
+              <p style={{ fontSize: 10, letterSpacing: "2px", color: item.color, margin: "0 0 10px", fontFamily: "system-ui", fontWeight: 600 }}>
+                IDEA CLAVE
+              </p>
+              <p style={{ fontSize: 16, color: WHITE, margin: 0, fontFamily: "'Georgia', serif", fontStyle: "italic", lineHeight: 1.55 }}>
+                "{pagina.idea_clave}"
+              </p>
+            </div>
+
+            {/* Reflexiones */}
+            <div style={{
+              padding: "18px",
+              borderRadius: 14,
+              background: CARD,
+              border: `1px solid ${BORDER}`,
+            }}>
+              <p style={{ fontSize: 10, letterSpacing: "2px", color: MUTED, margin: "0 0 14px", fontFamily: "system-ui", fontWeight: 600 }}>
+                REFLEXIÓN
+              </p>
+              {pagina.reflexion.map((preg, i) => (
+                <div key={i} style={{
+                  display: "flex", gap: 12, alignItems: "flex-start",
+                  paddingBottom: i < pagina.reflexion.length - 1 ? 14 : 0,
+                  marginBottom: i < pagina.reflexion.length - 1 ? 14 : 0,
+                  borderBottom: i < pagina.reflexion.length - 1 ? `1px solid ${BORDER}` : "none",
+                }}>
+                  <span style={{ color: item.color, fontSize: 16, flexShrink: 0, marginTop: 2 }}>→</span>
+                  <p style={{ fontSize: 14, color: "rgba(255,255,255,0.78)", margin: 0, lineHeight: 1.65, fontFamily: "system-ui" }}>
+                    {preg}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
+        {/* Navegación */}
+        <div style={{ display: "flex", gap: 10 }}>
+          {paginaIdx > 0 && (
+            <button onClick={() => setPaginaIdx(p => p - 1)} style={{
+              padding: "14px 18px", borderRadius: 12,
+              border: `1px solid ${BORDER}`, background: "transparent",
+              color: MUTED, fontSize: 13, cursor: "pointer", fontFamily: "system-ui",
+            }}>
+              ← Anterior
+            </button>
+          )}
+          {paginaIdx < total - 1 ? (
+            <button onClick={() => setPaginaIdx(p => p + 1)} style={{
+              flex: 1, padding: "14px", borderRadius: 12, border: "none",
+              background: item.color, color: "#080E18",
+              fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "system-ui",
+            }}>
+              Continuar →
+            </button>
+          ) : (
+            <button onClick={onBack} style={{
+              flex: 1, padding: "14px", borderRadius: 12,
+              border: `1px solid ${item.color}50`, background: "transparent",
+              color: item.color, fontSize: 13, cursor: "pointer", fontFamily: "system-ui",
+            }}>
+              Volver a Explorar
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── EXPLORAR VIEW ────────────────────────────────────────────
+function ExplorarView({ user, onBack }) {
+  const [itemActivo, setItemActivo] = useState(null);
+  const scrollRef = useRef(null);
+  useEffect(() => { scrollRef.current?.scrollTo({ top: 0, behavior: "auto" }); }, []);
+
+  if (itemActivo) {
+    return <LectorPaginado item={itemActivo} onBack={() => setItemActivo(null)} />;
+  }
+
+  return (
+    <div ref={scrollRef} className="flex-1 overflow-y-auto pb-24">
+      {/* Header */}
+      <div style={{
+        padding: "48px 24px 24px",
+        background: "linear-gradient(180deg, rgba(196,168,132,0.08) 0%, transparent 100%)",
+      }}>
+        <button onClick={onBack} style={{
+          display: "flex", alignItems: "center", gap: 6,
+          fontSize: 12, color: MUTED, background: "none", border: "none",
+          cursor: "pointer", marginBottom: 16, fontFamily: "system-ui",
+        }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <polyline points="15 18 9 12 15 6"/>
+          </svg>
+          Inicio
+        </button>
+        <p style={{ fontSize: 10, letterSpacing: "3px", color: "#C4A882", margin: "0 0 6px", fontFamily: "system-ui" }}>
+          FASE 2 · EXPLORAR
+        </p>
+        <h1 style={{ fontSize: 26, fontWeight: 400, color: WHITE, margin: "0 0 8px", fontFamily: "'Georgia', serif" }}>
+          Explorar
+        </h1>
+        <p style={{ fontSize: 13, color: MUTED, margin: 0, fontFamily: "system-ui", lineHeight: 1.5 }}>
+          Lecturas para profundizar en los temas que más importan.
+        </p>
+      </div>
+
+      {/* Grid de piezas */}
+      <div style={{ padding: "0 24px", display: "flex", flexDirection: "column", gap: 12 }}>
+        {EXPLORAR_ITEMS.map(item => (
+          <button
+            key={item.id}
+            onClick={() => setItemActivo(item)}
+            style={{
+              width: "100%", padding: "16px",
+              borderRadius: 16,
+              border: `1px solid ${item.color}25`,
+              background: `${item.color}06`,
+              cursor: "pointer", textAlign: "left",
+              display: "flex", alignItems: "center", gap: 14,
+            }}
+          >
+            <div style={{
+              width: 48, height: 48, borderRadius: 12, flexShrink: 0,
+              background: `${item.color}18`,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: 20,
+            }}>
+              📖
+            </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <p style={{ fontSize: 15, fontWeight: 600, color: WHITE, margin: "0 0 3px", fontFamily: "system-ui" }}>
+                {item.titulo}
+              </p>
+              <p style={{ fontSize: 11, color: MUTED, margin: "0 0 6px", fontFamily: "system-ui" }}>
+                {item.categoria}
+              </p>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{
+                  fontSize: 10, color: item.color,
+                  padding: "2px 8px", borderRadius: 10,
+                  background: `${item.color}15`,
+                  fontFamily: "system-ui", fontWeight: 600,
+                }}>
+                  📖 {item.tiempo}
+                </span>
+                <span style={{ fontSize: 10, color: MUTED, fontFamily: "system-ui" }}>
+                  {item.paginas.length} páginas
+                </span>
+              </div>
+            </div>
+            <span style={{ color: item.color, fontSize: 18, flexShrink: 0 }}>→</span>
+          </button>
+        ))}
+      </div>
+
+      <p style={{ textAlign: "center", fontSize: 11, color: DIM, margin: "24px 0 0", fontFamily: "'Georgia', serif", fontStyle: "italic" }}>
+        hapi · vivir consciente
+      </p>
+    </div>
+  );
+}
+
 // ─── MENÚ DE AJUSTES ──────────────────────────────────────────
 function SettingsMenu({ onClose, onReiniciar, onMotorIA }) {
   return (
@@ -4241,7 +4846,7 @@ function BottomNav({ active, onChange }) {
     <div className="absolute bottom-0 left-0 right-0 px-6 pb-6 pt-3"
       style={{background:`linear-gradient(180deg,transparent 0%,${BG} 40%)`}}>
       <div className="flex w-full rounded-2xl overflow-hidden" style={{background:CARD,border:`1px solid ${BORDER}`}}>
-        {[{id:"home",icon:"⌂",label:"Inicio"},{id:"progress",icon:"◎",label:"Progreso"},{id:"reminders",icon:"🔔",label:"Avisos"}].map(t => (
+        {[{id:"home",icon:"⌂",label:"Inicio"},{id:"explorar",icon:"✦",label:"Explorar"},{id:"progress",icon:"◎",label:"Progreso"},{id:"reminders",icon:"🔔",label:"Avisos"}].map(t => (
           <button key={t.id} onClick={() => onChange(t.id)}
             className="flex-1 flex flex-col items-center py-3 gap-0.5"
             style={{background:active===t.id?"rgba(107,168,212,0.12)":"none",border:"none",cursor:"pointer"}}>
@@ -4526,6 +5131,11 @@ export default function HapiApp() {
             onShowPillar={handleShowPillar}
             onAbrirMotor={user.completedModules?.length === 18 ? () => setMotorScreen("mi_camino") : null}
             onAbrirAjustes={() => setShowSettings(true)}
+          />
+        ) : tab === "explorar" ? (
+          <ExplorarView
+            user={user}
+            onBack={() => setTab("home")}
           />
         ) : tab === "progress" ? (
           <ProgressView user={user} onAbrirMotor={user.completedModules?.length === 18 ? () => setMotorScreen("mi_camino") : null}/>
