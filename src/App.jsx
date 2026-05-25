@@ -4508,15 +4508,16 @@ function ExplorarView({ user, onBack }) {
 }
 
 // ─── FEEDBACK FORM ────────────────────────────────────────────
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbywCdTBk1Cf35i-EwgHrNLThaCqxOfvRHF_9Jk8Dw2_nvpZ8lqmH263aDwjRbI_-R2FqA/exec";
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbzA5tmVfwXdkYH4ZXUIR4qAcB4D9qlHEyNZW4b4q6CJi4HKPM0_k7AIfRcYXxxBwxSoFQ/exec";
 
 function FeedbackForm({ onClose }) {
   const [step, setStep] = useState(0);
   const [enviado, setEnviado] = useState(false);
   const [enviando, setEnviando] = useState(false);
   const [form, setForm] = useState({
-    modulos: "", impacto: "", confusion: "",
-    descripcion: "", diferente: 3, rutina: "", precio: ""
+    nombre: "", modulos: "", calidad: 0, calidad_comentario: "",
+    impacto: "", confusion: "", descripcion: "",
+    diferente: 3, rutina: "", precio: ""
   });
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
@@ -4525,7 +4526,10 @@ function FeedbackForm({ onClose }) {
     setEnviando(true);
     try {
       const params = new URLSearchParams({
+        nombre: form.nombre,
         modulos: form.modulos,
+        calidad: form.calidad,
+        calidad_comentario: form.calidad_comentario,
         impacto: form.impacto,
         confusion: form.confusion,
         descripcion: form.descripcion,
@@ -4552,18 +4556,31 @@ function FeedbackForm({ onClose }) {
   };
 
   const steps = [
-    // Paso 0 — Progreso
+    // Paso 0 — Nombre
     <div key={0}>
       <p style={{ fontSize: 18, fontWeight: 700, color: WHITE, margin: "0 0 6px", fontFamily: "'Georgia', serif" }}>
-        ¿Cuántos módulos completaste?
+        ¿Cómo te llamás?
       </p>
       <p style={{ fontSize: 13, color: MUTED, margin: "0 0 20px", fontFamily: "system-ui" }}>
-        Incluí los que terminaste completos.
+        Para poder identificar tu feedback.
+      </p>
+      <input type="text" value={form.nombre} onChange={e => set("nombre", e.target.value)}
+        placeholder="Nombre y apellido" style={{ ...inputStyle, rows: undefined }} />
+    </div>,
+
+    // Paso 1 — Hasta qué módulo llegaste
+    <div key={1}>
+      <p style={{ fontSize: 18, fontWeight: 700, color: WHITE, margin: "0 0 6px", fontFamily: "'Georgia', serif" }}>
+        ¿Hasta qué módulo llegaste?
+      </p>
+      <p style={{ fontSize: 13, color: MUTED, margin: "0 0 20px", fontFamily: "system-ui" }}>
+        El último que abriste o completaste.
       </p>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-        {["Ninguno todavía", "1–2", "3–6", "7–12", "13–18"].map(op => (
+        {["Ninguno todavía", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18"].map(op => (
           <button key={op} onClick={() => set("modulos", op)} style={{
-            padding: "10px 16px", borderRadius: 20, border: `1px solid ${form.modulos === op ? "#C4A882" : BORDER}`,
+            padding: "10px 14px", borderRadius: 20,
+            border: `1px solid ${form.modulos === op ? "#C4A882" : BORDER}`,
             background: form.modulos === op ? "rgba(196,168,130,0.15)" : "transparent",
             color: form.modulos === op ? "#C4A882" : MUTED,
             fontSize: 13, cursor: "pointer", fontFamily: "system-ui",
@@ -4572,8 +4589,35 @@ function FeedbackForm({ onClose }) {
       </div>
     </div>,
 
-    // Paso 1 — Impacto
-    <div key={1}>
+    // Paso 2 — Calidad del contenido
+    <div key={2}>
+      <p style={{ fontSize: 18, fontWeight: 700, color: WHITE, margin: "0 0 6px", fontFamily: "'Georgia', serif" }}>
+        ¿Cómo calificarías la calidad del contenido?
+      </p>
+      <p style={{ fontSize: 13, color: MUTED, margin: "0 0 20px", fontFamily: "system-ui" }}>
+        Los módulos, los textos, las prácticas.
+      </p>
+      <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
+        {[1,2,3,4,5].map(n => (
+          <button key={n} onClick={() => set("calidad", n)} style={{
+            flex: 1, padding: "14px 0", borderRadius: 10,
+            border: `1px solid ${form.calidad === n ? "#C4A882" : BORDER}`,
+            background: form.calidad === n ? "rgba(196,168,130,0.15)" : "transparent",
+            color: form.calidad === n ? "#C4A882" : MUTED,
+            fontSize: 16, fontWeight: 700, cursor: "pointer",
+          }}>{n}</button>
+        ))}
+      </div>
+      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 20 }}>
+        <span style={{ fontSize: 10, color: DIM, fontFamily: "system-ui" }}>Mejorable</span>
+        <span style={{ fontSize: 10, color: DIM, fontFamily: "system-ui" }}>Excelente</span>
+      </div>
+      <textarea rows={3} value={form.calidad_comentario} onChange={e => set("calidad_comentario", e.target.value)}
+        placeholder="¿Algo específico sobre el contenido? (opcional)" style={inputStyle} />
+    </div>,
+
+    // Paso 3 — Impacto
+    <div key={3}>
       <p style={{ fontSize: 18, fontWeight: 700, color: WHITE, margin: "0 0 6px", fontFamily: "'Georgia', serif" }}>
         ¿Qué te resonó más?
       </p>
@@ -4584,8 +4628,8 @@ function FeedbackForm({ onClose }) {
         placeholder="Escribí lo que se te venga..." style={inputStyle} />
     </div>,
 
-    // Paso 2 — Confusión / faltantes
-    <div key={2}>
+    // Paso 4 — Confusión / faltantes
+    <div key={4}>
       <p style={{ fontSize: 18, fontWeight: 700, color: WHITE, margin: "0 0 6px", fontFamily: "'Georgia', serif" }}>
         ¿Algo confuso o que faltó?
       </p>
@@ -4596,8 +4640,8 @@ function FeedbackForm({ onClose }) {
         placeholder="Opcional, pero muy valioso..." style={inputStyle} />
     </div>,
 
-    // Paso 3 — Descripción (copy espontáneo)
-    <div key={3}>
+    // Paso 5 — Descripción (copy espontáneo)
+    <div key={5}>
       <p style={{ fontSize: 18, fontWeight: 700, color: WHITE, margin: "0 0 6px", fontFamily: "'Georgia', serif" }}>
         ¿Cómo le explicarías hapi a alguien?
       </p>
@@ -4608,8 +4652,8 @@ function FeedbackForm({ onClose }) {
         placeholder="Es una app que..." style={inputStyle} />
     </div>,
 
-    // Paso 4 — Diferenciación + precio
-    <div key={4}>
+    // Paso 6 — Diferenciación + precio
+    <div key={6}>
       <p style={{ fontSize: 18, fontWeight: 700, color: WHITE, margin: "0 0 6px", fontFamily: "'Georgia', serif" }}>
         Dos últimas preguntas
       </p>
@@ -4618,7 +4662,7 @@ function FeedbackForm({ onClose }) {
       </p>
 
       <span style={labelStyle}>¿QUÉ TAN DIFERENTE TE PARECE DE OTRAS APPS?</span>
-      <div style={{ display: "flex", gap: 8, marginBottom: 24 }}>
+      <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
         {[1,2,3,4,5].map(n => (
           <button key={n} onClick={() => set("diferente", n)} style={{
             flex: 1, padding: "10px 0", borderRadius: 10,
@@ -4648,8 +4692,8 @@ function FeedbackForm({ onClose }) {
       </div>
     </div>,
 
-    // Paso 5 — Rutina / continuidad
-    <div key={5}>
+    // Paso 7 — Rutina / continuidad
+    <div key={7}>
       <p style={{ fontSize: 18, fontWeight: 700, color: WHITE, margin: "0 0 6px", fontFamily: "'Georgia', serif" }}>
         ¿Te imaginás usando hapi regularmente?
       </p>
