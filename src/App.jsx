@@ -4507,8 +4507,242 @@ function ExplorarView({ user, onBack }) {
   );
 }
 
+// ─── FEEDBACK FORM ────────────────────────────────────────────
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbxNTf2Cz-32PIUnWNz-nMLQ8oUNficpWmWiLdrV1Mud_TjPurr1VEbxWwPi-h3IZ7kflw/exec";
+
+function FeedbackForm({ onClose }) {
+  const [step, setStep] = useState(0);
+  const [enviado, setEnviado] = useState(false);
+  const [enviando, setEnviando] = useState(false);
+  const [form, setForm] = useState({
+    modulos: "", impacto: "", confusion: "",
+    descripcion: "", diferente: 3, rutina: "", precio: ""
+  });
+
+  const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
+
+  async function enviar() {
+    setEnviando(true);
+    try {
+      await fetch(SHEET_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+    } catch (e) {}
+    setEnviando(false);
+    setEnviado(true);
+  }
+
+  const inputStyle = {
+    width: "100%", padding: "12px 14px", borderRadius: 10,
+    background: "rgba(255,255,255,0.05)", border: `1px solid ${BORDER}`,
+    color: WHITE, fontSize: 14, fontFamily: "system-ui",
+    outline: "none", resize: "none", boxSizing: "border-box",
+  };
+
+  const labelStyle = {
+    fontSize: 11, letterSpacing: "1.5px", color: MUTED,
+    fontFamily: "system-ui", fontWeight: 600, marginBottom: 8, display: "block",
+  };
+
+  const steps = [
+    // Paso 0 — Progreso
+    <div key={0}>
+      <p style={{ fontSize: 18, fontWeight: 700, color: WHITE, margin: "0 0 6px", fontFamily: "'Georgia', serif" }}>
+        ¿Cuántos módulos completaste?
+      </p>
+      <p style={{ fontSize: 13, color: MUTED, margin: "0 0 20px", fontFamily: "system-ui" }}>
+        Incluí los que terminaste completos.
+      </p>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+        {["Ninguno todavía", "1–2", "3–6", "7–12", "13–18"].map(op => (
+          <button key={op} onClick={() => set("modulos", op)} style={{
+            padding: "10px 16px", borderRadius: 20, border: `1px solid ${form.modulos === op ? "#C4A882" : BORDER}`,
+            background: form.modulos === op ? "rgba(196,168,130,0.15)" : "transparent",
+            color: form.modulos === op ? "#C4A882" : MUTED,
+            fontSize: 13, cursor: "pointer", fontFamily: "system-ui",
+          }}>{op}</button>
+        ))}
+      </div>
+    </div>,
+
+    // Paso 1 — Impacto
+    <div key={1}>
+      <p style={{ fontSize: 18, fontWeight: 700, color: WHITE, margin: "0 0 6px", fontFamily: "'Georgia', serif" }}>
+        ¿Qué te resonó más?
+      </p>
+      <p style={{ fontSize: 13, color: MUTED, margin: "0 0 20px", fontFamily: "system-ui" }}>
+        Un módulo, una idea, una práctica — lo que sea que se quedó.
+      </p>
+      <textarea rows={4} value={form.impacto} onChange={e => set("impacto", e.target.value)}
+        placeholder="Escribí lo que se te venga..." style={inputStyle} />
+    </div>,
+
+    // Paso 2 — Confusión / faltantes
+    <div key={2}>
+      <p style={{ fontSize: 18, fontWeight: 700, color: WHITE, margin: "0 0 6px", fontFamily: "'Georgia', serif" }}>
+        ¿Algo confuso o que faltó?
+      </p>
+      <p style={{ fontSize: 13, color: MUTED, margin: "0 0 20px", fontFamily: "system-ui" }}>
+        Cualquier fricción que hayas sentido — de contenido, diseño o flujo.
+      </p>
+      <textarea rows={4} value={form.confusion} onChange={e => set("confusion", e.target.value)}
+        placeholder="Opcional, pero muy valioso..." style={inputStyle} />
+    </div>,
+
+    // Paso 3 — Descripción (copy espontáneo)
+    <div key={3}>
+      <p style={{ fontSize: 18, fontWeight: 700, color: WHITE, margin: "0 0 6px", fontFamily: "'Georgia', serif" }}>
+        ¿Cómo le explicarías hapi a alguien?
+      </p>
+      <p style={{ fontSize: 13, color: MUTED, margin: "0 0 20px", fontFamily: "system-ui" }}>
+        Con tus palabras, sin pensar demasiado.
+      </p>
+      <textarea rows={4} value={form.descripcion} onChange={e => set("descripcion", e.target.value)}
+        placeholder="Es una app que..." style={inputStyle} />
+    </div>,
+
+    // Paso 4 — Diferenciación + precio
+    <div key={4}>
+      <p style={{ fontSize: 18, fontWeight: 700, color: WHITE, margin: "0 0 6px", fontFamily: "'Georgia', serif" }}>
+        Dos últimas preguntas
+      </p>
+      <p style={{ fontSize: 13, color: MUTED, margin: "0 0 20px", fontFamily: "system-ui" }}>
+        Ya casi terminás.
+      </p>
+
+      <span style={labelStyle}>¿QUÉ TAN DIFERENTE TE PARECE DE OTRAS APPS?</span>
+      <div style={{ display: "flex", gap: 8, marginBottom: 24 }}>
+        {[1,2,3,4,5].map(n => (
+          <button key={n} onClick={() => set("diferente", n)} style={{
+            flex: 1, padding: "10px 0", borderRadius: 10,
+            border: `1px solid ${form.diferente === n ? "#C4A882" : BORDER}`,
+            background: form.diferente === n ? "rgba(196,168,130,0.15)" : "transparent",
+            color: form.diferente === n ? "#C4A882" : MUTED,
+            fontSize: 14, fontWeight: 700, cursor: "pointer",
+          }}>{n}</button>
+        ))}
+      </div>
+      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 24 }}>
+        <span style={{ fontSize: 10, color: DIM, fontFamily: "system-ui" }}>Muy similar</span>
+        <span style={{ fontSize: 10, color: DIM, fontFamily: "system-ui" }}>Muy diferente</span>
+      </div>
+
+      <span style={labelStyle}>¿PAGARÍAS POR ACCESO COMPLETO?</span>
+      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        {["No pagaría", "$3–5 / mes", "$8–12 / mes", "$15+ / mes"].map(op => (
+          <button key={op} onClick={() => set("precio", op)} style={{
+            padding: "12px 16px", borderRadius: 10, textAlign: "left",
+            border: `1px solid ${form.precio === op ? "#C4A882" : BORDER}`,
+            background: form.precio === op ? "rgba(196,168,130,0.15)" : "transparent",
+            color: form.precio === op ? "#C4A882" : MUTED,
+            fontSize: 14, cursor: "pointer", fontFamily: "system-ui",
+          }}>{op}</button>
+        ))}
+      </div>
+    </div>,
+
+    // Paso 5 — Rutina / continuidad
+    <div key={5}>
+      <p style={{ fontSize: 18, fontWeight: 700, color: WHITE, margin: "0 0 6px", fontFamily: "'Georgia', serif" }}>
+        ¿Te imaginás usando hapi regularmente?
+      </p>
+      <p style={{ fontSize: 13, color: MUTED, margin: "0 0 20px", fontFamily: "system-ui" }}>
+        ¿Qué haría falta para que sea parte de tu rutina?
+      </p>
+      <textarea rows={4} value={form.rutina} onChange={e => set("rutina", e.target.value)}
+        placeholder="Sí / no / depende de..." style={inputStyle} />
+    </div>,
+  ];
+
+  return (
+    <div style={{
+      position: "fixed", inset: 0, zIndex: 200,
+      background: "rgba(0,0,0,0.85)",
+      display: "flex", alignItems: "flex-end",
+    }}>
+      <div style={{
+        width: "100%", maxWidth: "480px", margin: "0 auto",
+        background: "#0F1117", borderRadius: "24px 24px 0 0",
+        padding: "8px 0 48px",
+        border: `1px solid ${BORDER}`,
+        maxHeight: "90vh", overflowY: "auto",
+      }}>
+        {/* Handle */}
+        <div style={{ width: 36, height: 4, borderRadius: 4, background: DIM, margin: "12px auto 0" }}/>
+
+        {enviado ? (
+          <div style={{ padding: "40px 24px", textAlign: "center" }}>
+            <div style={{ fontSize: 48, marginBottom: 16 }}>✦</div>
+            <p style={{ fontSize: 20, fontWeight: 700, color: WHITE, margin: "0 0 8px", fontFamily: "'Georgia', serif" }}>
+              Gracias por el feedback
+            </p>
+            <p style={{ fontSize: 14, color: MUTED, margin: "0 0 32px", fontFamily: "system-ui", lineHeight: 1.6 }}>
+              Cada respuesta ayuda a hacer hapi mejor para vos y para todos los que vienen.
+            </p>
+            <button onClick={onClose} style={{
+              width: "100%", padding: "14px", borderRadius: 12, border: "none",
+              background: "#C4A882", color: "#080E18",
+              fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "system-ui",
+            }}>
+              Cerrar
+            </button>
+          </div>
+        ) : (
+          <div style={{ padding: "24px 24px 0" }}>
+            {/* Progreso */}
+            <div style={{ display: "flex", gap: 4, marginBottom: 28 }}>
+              {steps.map((_, i) => (
+                <div key={i} style={{
+                  flex: 1, height: 3, borderRadius: 4,
+                  background: i <= step ? "#C4A882" : DIM,
+                  transition: "background 0.3s",
+                }}/>
+              ))}
+            </div>
+
+            {steps[step]}
+
+            <div style={{ display: "flex", gap: 10, marginTop: 28 }}>
+              {step > 0 && (
+                <button onClick={() => setStep(s => s - 1)} style={{
+                  padding: "13px 18px", borderRadius: 12,
+                  border: `1px solid ${BORDER}`, background: "transparent",
+                  color: MUTED, fontSize: 13, cursor: "pointer", fontFamily: "system-ui",
+                }}>← Anterior</button>
+              )}
+              {step < steps.length - 1 ? (
+                <button onClick={() => setStep(s => s + 1)} style={{
+                  flex: 1, padding: "13px", borderRadius: 12, border: "none",
+                  background: "#C4A882", color: "#080E18",
+                  fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "system-ui",
+                }}>Continuar →</button>
+              ) : (
+                <button onClick={enviar} disabled={enviando} style={{
+                  flex: 1, padding: "13px", borderRadius: 12, border: "none",
+                  background: enviando ? DIM : "#C4A882", color: "#080E18",
+                  fontSize: 14, fontWeight: 700, cursor: enviando ? "default" : "pointer",
+                  fontFamily: "system-ui",
+                }}>{enviando ? "Enviando..." : "Enviar feedback ✦"}</button>
+              )}
+            </div>
+
+            <button onClick={onClose} style={{
+              width: "100%", marginTop: 12, padding: "10px",
+              background: "transparent", border: "none",
+              color: DIM, fontSize: 12, cursor: "pointer", fontFamily: "system-ui",
+            }}>Cerrar</button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ─── MENÚ DE AJUSTES ──────────────────────────────────────────
-function SettingsMenu({ onClose, onReiniciar, onMotorIA }) {
+function SettingsMenu({ onClose, onReiniciar, onMotorIA, onFeedback }) {
   return (
     <div style={{
       position: "fixed", inset: 0, zIndex: 100,
@@ -4531,6 +4765,30 @@ function SettingsMenu({ onClose, onReiniciar, onMotorIA }) {
         <p style={{ fontSize: 11, letterSpacing: "2px", color: MUTED, margin: "0 0 12px", padding: "0 24px", fontFamily: "system-ui", fontWeight: 600 }}>
           AJUSTES
         </p>
+
+        {/* Opción Feedback */}
+        <button onClick={onFeedback} style={{
+          width: "100%", padding: "16px 24px",
+          background: "transparent", border: "none",
+          borderBottom: `1px solid ${BORDER}`,
+          cursor: "pointer", textAlign: "left",
+          display: "flex", alignItems: "center", gap: 14,
+        }}>
+          <div style={{
+            width: 40, height: 40, borderRadius: 12, flexShrink: 0,
+            background: "rgba(196,168,130,0.12)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            fontSize: 20,
+          }}>✦</div>
+          <div>
+            <p style={{ fontSize: 14, color: WHITE, margin: 0, fontFamily: "system-ui", fontWeight: 500 }}>
+              Dar feedback
+            </p>
+            <p style={{ fontSize: 12, color: MUTED, margin: "2px 0 0", fontFamily: "system-ui" }}>
+              Ayudanos a mejorar hapi
+            </p>
+          </div>
+        </button>
 
         {/* Opción Motor IA */}
         <button onClick={onMotorIA} style={{
@@ -4922,6 +5180,7 @@ export default function HapiApp() {
   // ── Hapi state ──────────────────────────────────────────────────
   // ── Settings state ───────────────────────────────────────────
   const [showSettings, setShowSettings] = useState(false);
+  const [showFeedback, setShowFeedback] = useState(false);
 
   // motorScreen: null | "transicion" | "mi_camino" | "checkin" | "loading" | "practica"
   const [motorScreen, setMotorScreen] = useState(null);
@@ -5174,7 +5433,15 @@ export default function HapiApp() {
               }));
               setMotorScreen("transicion");
             }}
+            onFeedback={() => {
+              setShowSettings(false);
+              setShowFeedback(true);
+            }}
           />
+        )}
+
+        {showFeedback && (
+          <FeedbackForm onClose={() => setShowFeedback(false)} />
         )}
 
         <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-28 h-1 rounded-full opacity-20" style={{ background: "white" }}/>
