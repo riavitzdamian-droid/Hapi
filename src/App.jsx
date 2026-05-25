@@ -4508,7 +4508,7 @@ function ExplorarView({ user, onBack }) {
 }
 
 // ─── FEEDBACK FORM ────────────────────────────────────────────
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbxNTf2Cz-32PIUnWNz-nMLQ8oUNficpWmWiLdrV1Mud_TjPurr1VEbxWwPi-h3IZ7kflw/exec";
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbywCdTBk1Cf35i-EwgHrNLThaCqxOfvRHF_9Jk8Dw2_nvpZ8lqmH263aDwjRbI_-R2FqA/exec";
 
 function FeedbackForm({ onClose }) {
   const [step, setStep] = useState(0);
@@ -4524,12 +4524,16 @@ function FeedbackForm({ onClose }) {
   async function enviar() {
     setEnviando(true);
     try {
-      await fetch(SHEET_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+      const params = new URLSearchParams({
+        modulos: form.modulos,
+        impacto: form.impacto,
+        confusion: form.confusion,
+        descripcion: form.descripcion,
+        diferente: form.diferente,
+        rutina: form.rutina,
+        precio: form.precio,
       });
+      await fetch(`${SHEET_URL}?${params.toString()}`, { method: "GET", mode: "no-cors" });
     } catch (e) {}
     setEnviando(false);
     setEnviado(true);
