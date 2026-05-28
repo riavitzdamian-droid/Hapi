@@ -9,6 +9,31 @@ const WHITE   = "#FFFFFF";
 const MUTED   = "rgba(255,255,255,0.4)";
 const DIM     = "rgba(255,255,255,0.12)";
 
+// ─── AUDIO URLs (Google Drive) ───────────────────────────────
+const DRIVE_AUDIO = {
+  intro:       "https://drive.google.com/uc?export=download&id=1JdcmDAkD7Wy6hWol2K5VNOnf5-cmSbHX",
+  manifiesto:  "https://drive.google.com/uc?export=download&id=1CQkF8l1e12VkW4v8qghY_NzB23gYejjz",
+  transicion:  "https://drive.google.com/uc?export=download&id=1-GSA0LVK6AJmyMxAskuvnpw5UTUpKK1B",
+  1:  "https://drive.google.com/uc?export=download&id=1uv6j7rX1nc8EXNRNvpLEyCTq510FCdkG",
+  2:  "https://drive.google.com/uc?export=download&id=1LwEkYU99Qv90TZiiCH6uf3nywnqEFzDr",
+  3:  null,
+  4:  "https://drive.google.com/uc?export=download&id=14h_OawRXpDhRfLVicSjO0_EDIiFWp4Pl",
+  5:  "https://drive.google.com/uc?export=download&id=1WVaPpRebqSK6KH0-7u06bLlYYwBGKaJH",
+  6:  "https://drive.google.com/uc?export=download&id=1V8w9Ff8XmdFveVIoikYublgvbh9DpHuG",
+  7:  "https://drive.google.com/uc?export=download&id=1poZjvj4hB61zhxPGnW7FMX3VxfHb8_Pn",
+  8:  "https://drive.google.com/uc?export=download&id=1TqHmY7J77-Cq6Om4ZIGQxbFj17MBxSeL",
+  9:  "https://drive.google.com/uc?export=download&id=1VWYKpSw5ID3qp3GouJj1CsIwDWlCZZkG",
+  10: "https://drive.google.com/uc?export=download&id=1pUKd36j1FJXofTfWwxi_AQtbzNm_lNrz",
+  11: "https://drive.google.com/uc?export=download&id=1oKYtA9BK6aBGE15VzewH_dzHQtRl09eq",
+  12: "https://drive.google.com/uc?export=download&id=1yldNJP2P3ZqNhG7E3aXuPcuw6-z3BZ0U",
+  13: "https://drive.google.com/uc?export=download&id=1-s6igJWRubMRvVofs3COPlGoNgeevgGC",
+  14: "https://drive.google.com/uc?export=download&id=1viSjU-xnFpt5LSYxfOQeNK-5sNnVGKBh",
+  15: "https://drive.google.com/uc?export=download&id=1kGDSXOFFcTQ0QcekUzYBDswVefLhsmlM",
+  16: "https://drive.google.com/uc?export=download&id=1qvRigQa5_qomMWfOLckRYEzZtlAEOpaC",
+  17: "https://drive.google.com/uc?export=download&id=1ryDh0BNh1IkbUCitAPW2VjtwzswGtIyE",
+  18: "https://drive.google.com/uc?export=download&id=1JFIgDqU8QNCOJnZOvPdrYmGba8OxwFNF",
+};
+
 // ─── DATA ─────────────────────────────────────────────────────
 const PILLARS = [
   { id:1, num:"I",   name:"Cuerpo",               subtitle:"La base biológica de todo lo demás",       color:"#7ECBA1", emoji:"🌿", modules:[1,2,3,4,5,6] },
@@ -2610,14 +2635,23 @@ function SplashStep({ onNext, nombre }) {
   return (
     <Shell stepId="welcome">
       <div className="flex flex-col justify-center pb-8" style={{ minHeight: "calc(100dvh - 80px)" }}>
-        <div className="mb-10">
+        <div className="mb-6">
           <h1 className="font-bold mb-1" style={{ fontSize: 42, color: WHITE, fontFamily: "'Georgia', serif", letterSpacing: "-1px", lineHeight: 1.1 }}>
             hapi
           </h1>
           <p className="text-xs font-semibold" style={{ color: accent, letterSpacing: "3px" }}>VIVIR CONSCIENTE</p>
         </div>
 
-        <div className="p-4 rounded-2xl mb-8 relative overflow-hidden"
+        <div className="mb-6">
+          <AudioPlayer
+            url={DRIVE_AUDIO.intro}
+            accent={accent}
+            title="Introducción a hapi"
+            subtitle="Una breve bienvenida al sistema"
+          />
+        </div>
+
+        <div className="p-4 rounded-2xl mb-6 relative overflow-hidden"
           style={{ background: SURFACE, border: `1px solid ${accent}25` }}>
           <div className="absolute -top-4 -right-4 w-16 h-16 rounded-full opacity-10" style={{ background: accent }}/>
           <p className="text-xs font-semibold mb-2" style={{ color: accent, letterSpacing: "1.5px" }}>ANTES DE EMPEZAR</p>
@@ -2628,7 +2662,7 @@ function SplashStep({ onNext, nombre }) {
           </p>
         </div>
 
-        <div className="flex gap-3 mb-10">
+        <div className="flex gap-3 mb-8">
           {[["5 min", "para completar"], ["18", "módulos"], ["5", "pilares"]].map(([num, lab]) => (
             <div key={lab} className="flex-1 rounded-2xl text-center" style={{ background: SURFACE, border: `1px solid ${accent}30`, padding: "14px 8px" }}>
               <p className="font-bold" style={{ color: accent, fontSize: 20 }}>{num}</p>
@@ -2773,6 +2807,72 @@ function ResultStep({ answers, onStart }) {
   );
 }
 
+// ─── AUDIO PLAYER ────────────────────────────────────────────
+function AudioPlayer({ url, accent, title, subtitle, onEnded }) {
+  const audioRef = useRef(null);
+  const [playing, setPlaying] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const fmt = s => { if (!s || isNaN(s)) return "0:00"; return `${Math.floor(s/60)}:${Math.floor(s%60).toString().padStart(2,"0")}`; };
+  const toggle = () => {
+    const a = audioRef.current; if (!a) return;
+    if (playing) { a.pause(); setPlaying(false); }
+    else { setLoading(true); a.play().then(()=>{ setPlaying(true); setLoading(false); }).catch(()=>{ setError(true); setLoading(false); }); }
+  };
+  const seek = e => {
+    const a = audioRef.current; if (!a || !duration) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    a.currentTime = ((e.clientX - rect.left) / rect.width) * duration;
+  };
+  const bars = [4,6,5,8,6,4,7,9,7,5,6,9,7,5,8,6,10,8,6,7,9,6,5,7,8,6,4,7,9,7,5,8];
+  return (
+    <div className="rounded-2xl p-5 relative overflow-hidden" style={{background:`${accent}10`,border:`1px solid ${accent}25`}}>
+      <div className="absolute inset-0" style={{background:`radial-gradient(ellipse at 50% 50%,${accent}08 0%,transparent 70%)`}}/>
+      <audio ref={audioRef} src={url} crossOrigin="anonymous" preload="none"
+        onTimeUpdate={e=>{ const a=e.target; setCurrentTime(a.currentTime); setProgress(a.duration?a.currentTime/a.duration:0); }}
+        onLoadedMetadata={e=>setDuration(e.target.duration)}
+        onEnded={()=>{ setPlaying(false); setProgress(0); setCurrentTime(0); if(onEnded) onEnded(); }}
+        onError={()=>{ setError(true); setLoading(false); setPlaying(false); }}/>
+      <div className="flex items-end justify-center gap-0.5 mb-4 relative" style={{height:"36px"}}>
+        {bars.map((h,i)=>(
+          <div key={i} className="rounded-full transition-all duration-300" style={{
+            width:"2.5px", height:`${h*3}px`,
+            background:(progress>0&&(i/bars.length)<progress)?accent:`${accent}30`,
+            transform:playing?`scaleY(${0.6+0.4*Math.abs(Math.sin(i*0.7))})`:"scaleY(1)"
+          }}/>
+        ))}
+      </div>
+      <p className="text-center text-sm font-semibold mb-1 relative" style={{color:WHITE,fontFamily:"'Georgia',serif"}}>{title}</p>
+      {subtitle&&<p className="text-center text-xs mb-4 relative" style={{color:MUTED}}>{subtitle}</p>}
+      <div className="mb-2 cursor-pointer relative" onClick={seek}>
+        <div className="h-1.5 rounded-full overflow-hidden" style={{background:`${accent}20`}}>
+          <div className="h-full rounded-full transition-all duration-200" style={{width:`${progress*100}%`,background:accent}}/>
+        </div>
+      </div>
+      <div className="flex justify-between mb-4">
+        <span className="text-xs" style={{color:MUTED}}>{fmt(currentTime)}</span>
+        <span className="text-xs" style={{color:MUTED}}>{fmt(duration)}</span>
+      </div>
+      {error?(
+        <p className="text-center text-xs py-2" style={{color:"rgba(255,120,120,0.8)"}}>No se pudo cargar el audio. Verificá tu conexión.</p>
+      ):(
+        <button onClick={toggle} className="w-full py-3.5 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 active:scale-95 relative"
+          style={{background:accent,color:"#080E18",border:"none",cursor:"pointer"}}>
+          {loading
+            ?<span style={{width:15,height:15,border:"2px solid #080E18",borderTopColor:"transparent",borderRadius:"50%",display:"inline-block",animation:"hapiSpin 0.8s linear infinite"}}/>
+            :playing
+              ?<><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>Pausar</>
+              :<><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>Reproducir</>}
+        </button>
+      )}
+      <style>{`@keyframes hapiSpin{to{transform:rotate(360deg)}}`}</style>
+    </div>
+  );
+}
+
 // ─── MODULE PLAYER ────────────────────────────────────────────
 function ModulePlayer({ moduleNum, onBack, onComplete }) {
   const [mode, setMode] = useState(null);
@@ -2886,7 +2986,7 @@ function ModulePlayer({ moduleNum, onBack, onComplete }) {
   }
 
   if (mode === "audio") {
-    const seg = content.audio[audioSec];
+    const audioUrl = DRIVE_AUDIO[moduleNum];
     return (
       <div className="flex-1 overflow-y-auto pb-6">
         <div className="flex items-center justify-between px-6 pt-12 pb-6">
@@ -2897,38 +2997,35 @@ function ModulePlayer({ moduleNum, onBack, onComplete }) {
           </button>
           <span className="text-xs" style={{color:MUTED}}>🎧 {mod.time}</span>
         </div>
-        <div className="px-6 mb-6">
-          <div className="rounded-2xl p-5 text-center relative overflow-hidden" style={{background:`${accent}10`,border:`1px solid ${accent}25`}}>
-            <div className="absolute inset-0" style={{background:`radial-gradient(ellipse at 50% 50%,${accent}12 0%,transparent 70%)`}}/>
-            <div className="flex items-center justify-center gap-1 mb-4" style={{height:"40px"}}>
-              {[4,6,5,8,6,4,7,9,7,5,6,9,7,5,8,6,10,8,6,7,9,6,5,7,8].map((h,i) => (
-                <div key={i} className="rounded-full" style={{width:"3px",height:`${h*(audioSec===content.audio.length-1?4:3)}px`,background:i%3===0?accent:`${accent}50`,opacity:i<audioSec*5?1:0.25}}/>
-              ))}
+        <div className="px-6 mb-5">
+          {audioUrl ? (
+            <AudioPlayer
+              url={audioUrl}
+              accent={accent}
+              title={mod.title}
+              subtitle={`Módulo ${moduleNum} · incluye práctica guiada`}
+            />
+          ) : (
+            <div className="rounded-2xl p-6 text-center" style={{background:`${accent}10`,border:`1px solid ${accent}25`}}>
+              <p className="text-2xl mb-3">🎙️</p>
+              <p className="text-sm font-semibold mb-2" style={{color:WHITE}}>Audio en preparación</p>
+              <p className="text-xs leading-relaxed" style={{color:MUTED}}>
+                Este módulo requiere una grabación especial — lenta y pausada — para acompañar la práctica de elongación consciente. Estará disponible pronto.
+              </p>
             </div>
-            <p className="text-xs font-bold mb-1" style={{color:accent,letterSpacing:"1px"}}>{seg.time}</p>
-            <p className="text-base font-semibold" style={{color:WHITE,fontFamily:"'Georgia',serif"}}>{seg.title}</p>
-            <p className="text-xs mt-1" style={{color:MUTED}}>{audioSec+1} de {content.audio.length}</p>
-          </div>
-          <div className="h-1 rounded-full overflow-hidden mt-3" style={{background:DIM}}>
-            <div className="h-full rounded-full transition-all duration-500"
-              style={{width:`${((audioSec+1)/content.audio.length)*100}%`,background:accent}}/>
-          </div>
+          )}
         </div>
         <div className="px-6">
-          <p className="text-xs font-bold mb-3" style={{color:MUTED,letterSpacing:"1px"}}>GUIÓN</p>
-          {seg.text.split("\n\n").map((para,i) => (
-            <p key={i} className="text-sm leading-relaxed mb-4"
-              style={{color:para.startsWith("[")?"rgba(255,255,255,0.25)":"rgba(255,255,255,0.7)",fontStyle:para.startsWith("[")?"italic":"normal"}}>
-              {para}
+          <div className="rounded-2xl p-4 mb-4" style={{background:SURFACE,border:`1px solid ${BORDER}`}}>
+            <p className="text-xs font-bold mb-2" style={{color:accent,letterSpacing:"1px"}}>SOBRE ESTE AUDIO</p>
+            <p className="text-xs leading-relaxed" style={{color:MUTED}}>
+              El audio incluye la explicación del módulo, momentos de pausa para practicar, y una práctica guiada al final. Podés escucharlo mientras caminás, hacés elongación, o en un momento tranquilo.
             </p>
-          ))}
-        </div>
-        <div className="px-6 pt-4 flex gap-3">
-          {audioSec>0 && <button onClick={() => setAudioSec(i=>i-1)} className="px-5 py-4 rounded-2xl text-sm" style={{background:SURFACE,color:MUTED,border:"none",cursor:"pointer"}}>←</button>}
-          {audioSec<content.audio.length-1
-            ? <button onClick={() => setAudioSec(i=>i+1)} className="flex-1 py-4 rounded-2xl font-semibold text-sm" style={{background:accent,color:"#080E18",cursor:"pointer",border:"none"}}>Siguiente →</button>
-            : <button onClick={() => { onComplete(); setMode(null); }} className="flex-1 py-4 rounded-2xl font-semibold text-sm" style={{background:accent,color:"#080E18",cursor:"pointer",border:"none"}}>Completar módulo ✦</button>
-          }
+          </div>
+          <button onClick={() => { onComplete(); setMode(null); }} className="w-full py-4 rounded-2xl font-semibold text-sm"
+            style={{background:`${accent}15`,color:accent,border:`1px solid ${accent}30`,cursor:"pointer"}}>
+            ✓ Marcar como completado
+          </button>
         </div>
       </div>
     );
@@ -5116,41 +5213,57 @@ function ProgressView({ user }) {
 }
 
 // ─── REMINDERS VIEW ───────────────────────────────────────────
-function RemindersView() {
-  const [time, setTime] = useState("08:00");
-  const [days, setDays] = useState([1,2,3,4,5]);
-  const [saved, setSaved] = useState(false);
-  const toggleDay = d => setDays(p => p.includes(d)?p.filter(x=>x!==d):[...p,d].sort());
+function RemindersView({ user }) {
+  const sistemaCompleto = user?.completedModules?.length >= 18;
   return (
     <div className="flex-1 overflow-y-auto pb-24 px-6 pt-12">
-      <h2 className="font-bold mb-1" style={{fontSize:24,color:WHITE,fontFamily:"'Georgia',serif"}}>Recordatorios</h2>
-      <p className="text-sm mb-6" style={{color:MUTED}}>Configurá cuándo querés que hapi te avise</p>
-      <div className="rounded-2xl p-4 mb-4" style={{background:CARD,border:`1px solid ${BORDER}`}}>
-        <div className="flex items-center gap-2 mb-2"><span>⏰</span><p className="text-sm font-bold" style={{color:WHITE}}>Práctica diaria</p></div>
-        <p className="text-xs mb-3" style={{color:MUTED}}>Un aviso liviano para sostener la práctica del día</p>
-        <input type="time" value={time} onChange={e=>setTime(e.target.value)} className="px-3 py-2 rounded-xl text-sm font-bold w-full mb-3"
-          style={{background:SURFACE,border:`1px solid ${BORDER}`,color:WHITE}}/>
-        <div className="flex gap-2">
-          {["L","M","X","J","V","S","D"].map((d,i) => (
-            <button key={d} onClick={() => toggleDay(i+1)}
-              className="flex-1 py-2 rounded-xl text-xs font-bold"
-              style={{background:days.includes(i+1)?"#6BA8D420":SURFACE,color:days.includes(i+1)?"#6BA8D4":MUTED,border:`1px solid ${days.includes(i+1)?"#6BA8D440":BORDER}`,cursor:"pointer"}}>
-              {d}
-            </button>
-          ))}
-        </div>
+      <h2 className="font-bold mb-1" style={{fontSize:24,color:WHITE,fontFamily:"'Georgia',serif"}}>Audios</h2>
+      <p className="text-sm mb-6" style={{color:MUTED}}>Piezas especiales del sistema</p>
+
+      <p className="text-xs font-bold mb-3" style={{color:MUTED,letterSpacing:"1px"}}>BIBLIOTECA</p>
+
+      <div className="mb-5">
+        <p className="text-xs font-semibold mb-2" style={{color:"#C4A8D4"}}>Manifiesto · hapi</p>
+        <AudioPlayer
+          url={DRIVE_AUDIO.manifiesto}
+          accent="#C4A8D4"
+          title="El Manifiesto"
+          subtitle="La orientación del sistema"
+        />
       </div>
+
+      <div className="mb-6">
+        <div className="flex items-center gap-2 mb-2">
+          <p className="text-xs font-semibold" style={{color:"#6BA8D4"}}>Transición · Al Motor IA</p>
+          {!sistemaCompleto && (
+            <span className="text-xs px-2 py-0.5 rounded-full" style={{background:"rgba(107,168,212,0.12)",color:"#6BA8D4",border:"1px solid rgba(107,168,212,0.25)"}}>
+              🔒 18 módulos
+            </span>
+          )}
+        </div>
+        {sistemaCompleto ? (
+          <AudioPlayer
+            url={DRIVE_AUDIO.transicion}
+            accent="#6BA8D4"
+            title="Transición al Motor IA"
+            subtitle="El siguiente nivel del sistema"
+          />
+        ) : (
+          <div className="rounded-2xl p-5 text-center" style={{background:"rgba(107,168,212,0.06)",border:"1px solid rgba(107,168,212,0.12)"}}>
+            <p className="text-lg mb-2">🔒</p>
+            <p className="text-sm font-semibold mb-1" style={{color:"rgba(255,255,255,0.4)"}}>Se desbloquea al completar los 18 módulos</p>
+            <p className="text-xs" style={{color:MUTED}}>{user?.completedModules?.length || 0}/18 módulos completados</p>
+          </div>
+        )}
+      </div>
+
+      <p className="text-xs font-bold mb-3" style={{color:MUTED,letterSpacing:"1px"}}>RECORDATORIOS</p>
       {[["📅","Avance semanal","Lunes · 9:00 — cuando es momento de avanzar al próximo módulo"],["🌟","Semana de consolidación","Al terminar cada pilar — integrar antes de continuar"]].map(([icon,title,desc]) => (
         <div key={title} className="rounded-2xl p-4 mb-4" style={{background:CARD,border:`1px solid ${BORDER}`}}>
           <div className="flex items-center gap-2 mb-1"><span>{icon}</span><p className="text-sm font-bold" style={{color:WHITE}}>{title}</p></div>
           <p className="text-xs" style={{color:MUTED}}>{desc}</p>
         </div>
       ))}
-      <button onClick={() => { setSaved(true); setTimeout(()=>setSaved(false),2000); }}
-        className="w-full py-4 rounded-2xl font-semibold text-sm"
-        style={{background:saved?"#7ECBA1":"#6BA8D4",color:"#080E18",cursor:"pointer",border:"none"}}>
-        {saved?"✓ Guardado":"Guardar recordatorios"}
-      </button>
     </div>
   );
 }
@@ -5456,7 +5569,7 @@ export default function HapiApp() {
         ) : tab === "progress" ? (
           <ProgressView user={user} onAbrirMotor={user.completedModules?.length === 18 ? () => setMotorScreen("mi_camino") : null}/>
         ) : (
-          <RemindersView/>
+          <RemindersView user={user}/>
         )}
 
         {!activeModule && !motorScreen && (
