@@ -11,27 +11,27 @@ const DIM     = "rgba(255,255,255,0.12)";
 
 // ─── AUDIO URLs (Google Drive) ───────────────────────────────
 const DRIVE_AUDIO = {
-  intro:       "https://drive.google.com/uc?export=download&id=1JdcmDAkD7Wy6hWol2K5VNOnf5-cmSbHX",
-  manifiesto:  "https://drive.google.com/uc?export=download&id=1CQkF8l1e12VkW4v8qghY_NzB23gYejjz",
-  transicion:  "https://drive.google.com/uc?export=download&id=1-GSA0LVK6AJmyMxAskuvnpw5UTUpKK1B",
-  1:  "https://drive.google.com/uc?export=download&id=1uv6j7rX1nc8EXNRNvpLEyCTq510FCdkG",
-  2:  "https://drive.google.com/uc?export=download&id=1LwEkYU99Qv90TZiiCH6uf3nywnqEFzDr",
+  intro:       "https://docs.google.com/uc?export=download&confirm=t&id=1JdcmDAkD7Wy6hWol2K5VNOnf5-cmSbHX",
+  manifiesto:  "https://docs.google.com/uc?export=download&confirm=t&id=1CQkF8l1e12VkW4v8qghY_NzB23gYejjz",
+  transicion:  "https://docs.google.com/uc?export=download&confirm=t&id=1-GSA0LVK6AJmyMxAskuvnpw5UTUpKK1B",
+  1:  "https://docs.google.com/uc?export=download&confirm=t&id=1uv6j7rX1nc8EXNRNvpLEyCTq510FCdkG",
+  2:  "https://docs.google.com/uc?export=download&confirm=t&id=1LwEkYU99Qv90TZiiCH6uf3nywnqEFzDr",
   3:  null,
-  4:  "https://drive.google.com/uc?export=download&id=14h_OawRXpDhRfLVicSjO0_EDIiFWp4Pl",
-  5:  "https://drive.google.com/uc?export=download&id=1WVaPpRebqSK6KH0-7u06bLlYYwBGKaJH",
-  6:  "https://drive.google.com/uc?export=download&id=1V8w9Ff8XmdFveVIoikYublgvbh9DpHuG",
-  7:  "https://drive.google.com/uc?export=download&id=1poZjvj4hB61zhxPGnW7FMX3VxfHb8_Pn",
-  8:  "https://drive.google.com/uc?export=download&id=1TqHmY7J77-Cq6Om4ZIGQxbFj17MBxSeL",
-  9:  "https://drive.google.com/uc?export=download&id=1VWYKpSw5ID3qp3GouJj1CsIwDWlCZZkG",
-  10: "https://drive.google.com/uc?export=download&id=1pUKd36j1FJXofTfWwxi_AQtbzNm_lNrz",
-  11: "https://drive.google.com/uc?export=download&id=1oKYtA9BK6aBGE15VzewH_dzHQtRl09eq",
-  12: "https://drive.google.com/uc?export=download&id=1yldNJP2P3ZqNhG7E3aXuPcuw6-z3BZ0U",
-  13: "https://drive.google.com/uc?export=download&id=1-s6igJWRubMRvVofs3COPlGoNgeevgGC",
-  14: "https://drive.google.com/uc?export=download&id=1viSjU-xnFpt5LSYxfOQeNK-5sNnVGKBh",
-  15: "https://drive.google.com/uc?export=download&id=1kGDSXOFFcTQ0QcekUzYBDswVefLhsmlM",
-  16: "https://drive.google.com/uc?export=download&id=1qvRigQa5_qomMWfOLckRYEzZtlAEOpaC",
-  17: "https://drive.google.com/uc?export=download&id=1ryDh0BNh1IkbUCitAPW2VjtwzswGtIyE",
-  18: "https://drive.google.com/uc?export=download&id=1JFIgDqU8QNCOJnZOvPdrYmGba8OxwFNF",
+  4:  "https://docs.google.com/uc?export=download&confirm=t&id=14h_OawRXpDhRfLVicSjO0_EDIiFWp4Pl",
+  5:  "https://docs.google.com/uc?export=download&confirm=t&id=1WVaPpRebqSK6KH0-7u06bLlYYwBGKaJH",
+  6:  "https://docs.google.com/uc?export=download&confirm=t&id=1V8w9Ff8XmdFveVIoikYublgvbh9DpHuG",
+  7:  "https://docs.google.com/uc?export=download&confirm=t&id=1poZjvj4hB61zhxPGnW7FMX3VxfHb8_Pn",
+  8:  "https://docs.google.com/uc?export=download&confirm=t&id=1TqHmY7J77-Cq6Om4ZIGQxbFj17MBxSeL",
+  9:  "https://docs.google.com/uc?export=download&confirm=t&id=1VWYKpSw5ID3qp3GouJj1CsIwDWlCZZkG",
+  10: "https://docs.google.com/uc?export=download&confirm=t&id=1pUKd36j1FJXofTfWwxi_AQtbzNm_lNrz",
+  11: "https://docs.google.com/uc?export=download&confirm=t&id=1oKYtA9BK6aBGE15VzewH_dzHQtRl09eq",
+  12: "https://docs.google.com/uc?export=download&confirm=t&id=1yldNJP2P3ZqNhG7E3aXuPcuw6-z3BZ0U",
+  13: "https://docs.google.com/uc?export=download&confirm=t&id=1-s6igJWRubMRvVofs3COPlGoNgeevgGC",
+  14: "https://docs.google.com/uc?export=download&confirm=t&id=1viSjU-xnFpt5LSYxfOQeNK-5sNnVGKBh",
+  15: "https://docs.google.com/uc?export=download&confirm=t&id=1kGDSXOFFcTQ0QcekUzYBDswVefLhsmlM",
+  16: "https://docs.google.com/uc?export=download&confirm=t&id=1qvRigQa5_qomMWfOLckRYEzZtlAEOpaC",
+  17: "https://docs.google.com/uc?export=download&confirm=t&id=1ryDh0BNh1IkbUCitAPW2VjtwzswGtIyE",
+  18: "https://docs.google.com/uc?export=download&confirm=t&id=1JFIgDqU8QNCOJnZOvPdrYmGba8OxwFNF",
 };
 
 // ─── DATA ─────────────────────────────────────────────────────
@@ -2831,7 +2831,7 @@ function AudioPlayer({ url, accent, title, subtitle, onEnded }) {
   return (
     <div className="rounded-2xl p-5 relative overflow-hidden" style={{background:`${accent}10`,border:`1px solid ${accent}25`}}>
       <div className="absolute inset-0" style={{background:`radial-gradient(ellipse at 50% 50%,${accent}08 0%,transparent 70%)`}}/>
-      <audio ref={audioRef} src={url} crossOrigin="anonymous" preload="none"
+      <audio ref={audioRef} src={url} preload="none"
         onTimeUpdate={e=>{ const a=e.target; setCurrentTime(a.currentTime); setProgress(a.duration?a.currentTime/a.duration:0); }}
         onLoadedMetadata={e=>setDuration(e.target.duration)}
         onEnded={()=>{ setPlaying(false); setProgress(0); setCurrentTime(0); if(onEnded) onEnded(); }}
