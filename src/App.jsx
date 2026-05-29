@@ -33,6 +33,16 @@ const DRIVE_AUDIO = {
   16: `${BASE}/Modulo 16.mp3`,
   17: `${BASE}/Modulo 17.mp3`,
   18: `${BASE}/Modulo 18.mp3`,
+  // Explorar
+  modestia:      `${BASE}/modestia.mp3`,
+  vacio:         `${BASE}/vacio.mp3`,
+  autoestima:    `${BASE}/autoestima.mp3`,
+  perfeccionismo:`${BASE}/perfeccionismo.mp3`,
+  soledad:       `${BASE}/soledad.mp3`,
+  velocidad:     `${BASE}/velocidad.mp3`,
+  bullying:      `${BASE}/bullying.mp3`,
+  idealizacion:  `${BASE}/idealizacion.mp3`,
+  celos:         `${BASE}/celos.mp3`,
 };
 
 // ─── DATA ─────────────────────────────────────────────────────
@@ -4496,6 +4506,21 @@ function LectorPaginado({ item, onBack }) {
               ))}
             </div>
           </>
+        )}
+
+        {/* Audio del artículo — aparece en la primera página */}
+        {paginaIdx === 0 && DRIVE_AUDIO[item.id] && (
+          <div style={{ marginBottom: 20 }}>
+            <p style={{ fontSize: 11, letterSpacing: "2px", color: item.color, margin: "0 0 10px", fontFamily: "system-ui", fontWeight: 600 }}>
+              ESCUCHÁ EL ARTÍCULO COMPLETO
+            </p>
+            <AudioPlayer
+              url={DRIVE_AUDIO[item.id]}
+              accent={item.color}
+              title={item.titulo}
+              subtitle="Incluye preguntas de reflexión"
+            />
+          </div>
         )}
 
         {/* Navegación */}
