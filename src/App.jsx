@@ -2881,6 +2881,13 @@ function ModulePlayer({ moduleNum, onBack, onComplete }) {
   const [audioSec, setAudioSec] = useState(0);
   const scrollRef = useRef(null);
 
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = 0;
+    }
+    window.scrollTo(0, 0);
+  }, [sec, mode]);
+
   const mod = MODULES[moduleNum];
   const content = MODULE_CONTENT[moduleNum];
   const pillar = getPillar(moduleNum);
@@ -2963,7 +2970,7 @@ function ModulePlayer({ moduleNum, onBack, onComplete }) {
         </div>
         <div className="flex gap-1.5 px-6 mb-4 overflow-x-auto">
           {content.sections.map((s,i) => (
-            <button key={i} onClick={() => { setSec(i); scrollRef.current?.scrollTo({top:0,behavior:"smooth"}); }}
+            <button key={i} onClick={() => { setSec(i); }}
               className="text-xs px-2.5 py-1 rounded-full flex-shrink-0"
               style={{background:i===sec?`${accent}20`:SURFACE,color:i===sec?accent:MUTED,border:`1px solid ${i===sec?accent+"40":BORDER}`,cursor:"pointer"}}>
               {s.label}
@@ -2976,9 +2983,9 @@ function ModulePlayer({ moduleNum, onBack, onComplete }) {
           {renderSection(section.body, accent)}
         </div>
         <div className="px-6 pt-4 flex gap-3">
-          {sec>0 && <button onClick={() => { setSec(i=>i-1); scrollRef.current?.scrollTo({top:0,behavior:"auto"}); }} className="px-5 py-4 rounded-2xl text-sm" style={{background:SURFACE,color:MUTED,border:"none",cursor:"pointer"}}>←</button>}
+          {sec>0 && <button onClick={() => setSec(i=>i-1)} className="px-5 py-4 rounded-2xl text-sm" style={{background:SURFACE,color:MUTED,border:"none",cursor:"pointer"}}>←</button>}
           {sec<content.sections.length-1
-            ? <button onClick={() => { setSec(i=>i+1); scrollRef.current?.scrollTo({top:0,behavior:"auto"}); }} className="flex-1 py-4 rounded-2xl font-semibold text-sm" style={{background:accent,color:"#080E18",cursor:"pointer",border:"none"}}>Continuar →</button>
+            ? <button onClick={() => setSec(i=>i+1)} className="flex-1 py-4 rounded-2xl font-semibold text-sm" style={{background:accent,color:"#080E18",cursor:"pointer",border:"none"}}>Continuar →</button>
             : <button onClick={() => { onComplete(); setMode(null); }} className="flex-1 py-4 rounded-2xl font-semibold text-sm" style={{background:accent,color:"#080E18",cursor:"pointer",border:"none"}}>Completar módulo ✦</button>
           }
         </div>
@@ -4384,7 +4391,8 @@ function LectorPaginado({ item, onBack }) {
   const esReflexion = pagina.reflexion != null;
 
   useEffect(() => {
-    scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+    if (scrollRef.current) scrollRef.current.scrollTop = 0;
+    window.scrollTo(0, 0);
   }, [paginaIdx]);
 
   return (
