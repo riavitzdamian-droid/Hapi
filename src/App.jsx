@@ -2819,7 +2819,7 @@ function ResultStep({ answers, onStart }) {
 }
 
 // ─── AUDIO PLAYER ────────────────────────────────────────────
-function AudioPlayer({ url, accent, title, subtitle, onEnded }) {
+function AudioPlayer({ url, accent, title, subtitle, onEnded, autoPlay = false }) {
   const audioRef = useRef(null);
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -2828,6 +2828,15 @@ function AudioPlayer({ url, accent, title, subtitle, onEnded }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const fmt = s => { if (!s || isNaN(s)) return "0:00"; return `${Math.floor(s/60)}:${Math.floor(s%60).toString().padStart(2,"0")}`; };
+
+  useEffect(() => {
+    if (autoPlay && audioRef.current) {
+      setLoading(true);
+      audioRef.current.play()
+        .then(() => { setPlaying(true); setLoading(false); })
+        .catch(() => { setLoading(false); });
+    }
+  }, [autoPlay]);
   const toggle = () => {
     const a = audioRef.current; if (!a) return;
     if (playing) { a.pause(); setPlaying(false); }
@@ -4393,7 +4402,7 @@ const EXPLORAR_ITEMS = [
 
 
 // ─── LECTOR PAGINADO — EXPLORAR ───────────────────────────────
-function LectorPaginado({ item, onBack }) {
+function LectorPaginado({ item, onBack, autoPlay = false }) {
   const [paginaIdx, setPaginaIdx] = useState(0);
   const scrollRef = useRef(null);
   const pagina = item.paginas[paginaIdx];
@@ -4519,6 +4528,7 @@ function LectorPaginado({ item, onBack }) {
               accent={item.color}
               title={item.titulo}
               subtitle="Incluye preguntas de reflexión"
+              autoPlay={autoPlay}
             />
           </div>
         )}
@@ -4560,11 +4570,12 @@ function LectorPaginado({ item, onBack }) {
 // ─── EXPLORAR VIEW ────────────────────────────────────────────
 function ExplorarView({ user, onBack }) {
   const [itemActivo, setItemActivo] = useState(null);
+  const [autoPlay, setAutoPlay] = useState(false);
   const scrollRef = useRef(null);
   useEffect(() => { scrollRef.current?.scrollTo({ top: 0, behavior: "auto" }); }, []);
 
   if (itemActivo) {
-    return <LectorPaginado item={itemActivo} onBack={() => setItemActivo(null)} />;
+    return <LectorPaginado item={itemActivo} autoPlay={autoPlay} onBack={() => { setItemActivo(null); setAutoPlay(false); }} />;
   }
 
   return (
@@ -4598,49 +4609,61 @@ function ExplorarView({ user, onBack }) {
       {/* Grid de piezas */}
       <div style={{ padding: "0 24px", display: "flex", flexDirection: "column", gap: 12 }}>
         {EXPLORAR_ITEMS.map(item => (
-          <button
-            key={item.id}
-            onClick={() => setItemActivo(item)}
-            style={{
-              width: "100%", padding: "16px",
-              borderRadius: 16,
-              border: `1px solid ${item.color}25`,
-              background: `${item.color}06`,
-              cursor: "pointer", textAlign: "left",
-              display: "flex", alignItems: "center", gap: 14,
-            }}
-          >
-            <div style={{
-              width: 48, height: 48, borderRadius: 12, flexShrink: 0,
-              background: `${item.color}18`,
-              display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: 20,
-            }}>
-              📖
-            </div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <p style={{ fontSize: 15, fontWeight: 600, color: WHITE, margin: "0 0 3px", fontFamily: "system-ui" }}>
-                {item.titulo}
-              </p>
-              <p style={{ fontSize: 11, color: MUTED, margin: "0 0 6px", fontFamily: "system-ui" }}>
-                {item.categoria}
-              </p>
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <span style={{
-                  fontSize: 10, color: item.color,
-                  padding: "2px 8px", borderRadius: 10,
-                  background: `${item.color}15`,
-                  fontFamily: "system-ui", fontWeight: 600,
-                }}>
-                  📖 {item.tiempo}
-                </span>
-                <span style={{ fontSize: 10, color: MUTED, fontFamily: "system-ui" }}>
-                  {item.paginas.length} páginas
-                </span>
+          <div key={item.id} style={{
+            width: "100%", padding: "16px",
+            borderRadius: 16,
+            border: `1px solid ${item.color}25`,
+            background: `${item.color}06`,
+            display: "flex", alignItems: "center", gap: 14,
+          }}>
+            {/* Info — click abre lectura */}
+            <button onClick={() => { setAutoPlay(false); setItemActivo(item); }}
+              style={{ flex: 1, minWidth: 0, background: "none", border: "none", cursor: "pointer", textAlign: "left", padding: 0, display: "flex", alignItems: "center", gap: 14 }}>
+              <div style={{
+                width: 48, height: 48, borderRadius: 12, flexShrink: 0,
+                background: `${item.color}18`,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                fontSize: 20,
+              }}>
+                📖
               </div>
-            </div>
-            <span style={{ color: item.color, fontSize: 18, flexShrink: 0 }}>→</span>
-          </button>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <p style={{ fontSize: 15, fontWeight: 600, color: WHITE, margin: "0 0 3px", fontFamily: "system-ui" }}>
+                  {item.titulo}
+                </p>
+                <p style={{ fontSize: 11, color: MUTED, margin: "0 0 6px", fontFamily: "system-ui" }}>
+                  {item.categoria}
+                </p>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{
+                    fontSize: 10, color: item.color,
+                    padding: "2px 8px", borderRadius: 10,
+                    background: `${item.color}15`,
+                    fontFamily: "system-ui", fontWeight: 600,
+                  }}>
+                    📖 {item.tiempo}
+                  </span>
+                  <span style={{ fontSize: 10, color: MUTED, fontFamily: "system-ui" }}>
+                    {item.paginas.length} páginas
+                  </span>
+                </div>
+              </div>
+            </button>
+
+            {/* Botón audio — solo si tiene audio */}
+            {DRIVE_AUDIO[item.id] && (
+              <button onClick={() => { setAutoPlay(true); setItemActivo(item); }}
+                style={{
+                  width: 44, height: 44, borderRadius: 12, flexShrink: 0,
+                  background: `${item.color}20`,
+                  border: `1px solid ${item.color}40`,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  fontSize: 18, cursor: "pointer",
+                }}>
+                🎧
+              </button>
+            )}
+          </div>
         ))}
       </div>
 
