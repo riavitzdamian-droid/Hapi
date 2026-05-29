@@ -2895,168 +2895,87 @@ function AudioPlayer({ url, accent, title, subtitle, onEnded, autoPlay = false }
 
 // ─── MODULE PLAYER ────────────────────────────────────────────
 function ModulePlayer({ moduleNum, onBack, onComplete, initialMode = null }) {
-  const [mode, setMode] = useState(initialMode);
+  const autoPlayAudio = initialMode === "audio";
   const [sec, setSec] = useState(0);
-  const [audioSec, setAudioSec] = useState(0);
   const scrollRef = useRef(null);
 
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = 0;
-    }
+    if (scrollRef.current) scrollRef.current.scrollTop = 0;
     window.scrollTo(0, 0);
-  }, [sec, mode]);
+  }, [sec]);
 
   const mod = MODULES[moduleNum];
   const content = MODULE_CONTENT[moduleNum];
   const pillar = getPillar(moduleNum);
   const accent = mod.accent;
+  const audioUrl = DRIVE_AUDIO[moduleNum];
+  const section = content.sections[sec];
 
-  if (!mode) return (
-    <div className="flex-1 overflow-y-auto pb-6">
-      <div className="relative px-6 pt-12 pb-6" style={{background:`linear-gradient(180deg,${accent}20 0%,transparent 100%)`}}>
-        <button onClick={onBack} className="flex items-center gap-1.5 text-xs mb-6"
+  return (
+    <div ref={scrollRef} className="flex-1 overflow-y-auto pb-6">
+      {/* Header */}
+      <div className="flex items-center justify-between px-6 pt-12 pb-4 flex-shrink-0">
+        <button onClick={onBack} className="flex items-center gap-1.5 text-xs"
           style={{color:MUTED,background:"none",border:"none",cursor:"pointer"}}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg>
-          Inicio
+          Volver
         </button>
-        <span className="text-xs font-bold px-2.5 py-1 rounded-full mb-3 inline-block"
-          style={{background:`${accent}20`,color:accent,border:`1px solid ${accent}35`}}>
-          Pilar {pillar?.num} · {pillar?.name}
-        </span>
-        <p className="text-xs mb-1" style={{color:MUTED}}>Módulo {moduleNum}</p>
-        <h2 className="font-bold mb-2 leading-tight" style={{fontSize:22,color:WHITE,fontFamily:"'Georgia',serif"}}>{mod.title}</h2>
-        <div className="flex gap-2 flex-wrap mt-3">
-          {mod.tags.map(t => (
-            <span key={t} className="text-xs px-2.5 py-1 rounded-full"
-              style={{background:SURFACE,color:MUTED,border:`1px solid ${BORDER}`}}>{t}</span>
-          ))}
+        <span className="text-xs" style={{color:MUTED}}>{sec+1}/{content.sections.length}</span>
+      </div>
+
+      {/* Reproductor de audio — siempre visible arriba */}
+      <div className="px-6 mb-4">
+        {audioUrl ? (
+          <AudioPlayer
+            url={audioUrl}
+            accent={accent}
+            title={mod.title}
+            subtitle={`Módulo ${moduleNum} · incluye práctica guiada`}
+            autoPlay={autoPlayAudio}
+          />
+        ) : (
+          <div className="rounded-2xl p-4 text-center" style={{background:`${accent}08`,border:`1px solid ${accent}20`}}>
+            <p className="text-xs" style={{color:MUTED}}>🎙️ Audio en preparación</p>
+          </div>
+        )}
+      </div>
+
+      {/* Barra de progreso */}
+      <div className="px-6 mb-3">
+        <div className="h-1 rounded-full overflow-hidden" style={{background:DIM}}>
+          <div className="h-full rounded-full transition-all duration-500"
+            style={{width:`${((sec+1)/content.sections.length)*100}%`,background:accent}}/>
         </div>
       </div>
 
-      <div className="px-6 pt-2">
-        <p className="text-xs font-bold mb-3" style={{color:MUTED,letterSpacing:"1px"}}>ELEGÍ TU MODO</p>
-        <button onClick={() => setMode("read")}
-          className="w-full p-4 rounded-2xl mb-3 text-left"
-          style={{background:`${accent}12`,border:`1px solid ${accent}35`,cursor:"pointer"}}>
-          <div className="flex items-center gap-3">
-            <span className="text-2xl">📖</span>
-            <div className="flex-1">
-              <p className="text-sm font-semibold" style={{color:WHITE}}>Lectura</p>
-              <p className="text-xs" style={{color:MUTED}}>~5 min · {content.sections.length} secciones</p>
-            </div>
-            <span className="text-xs px-2 py-1 rounded-full" style={{background:`${accent}20`,color:accent}}>Leer</span>
-          </div>
-        </button>
-        <button onClick={() => setMode("audio")}
-          className="w-full p-4 rounded-2xl mb-6 text-left"
-          style={{background:CARD,border:`1px solid ${BORDER}`,cursor:"pointer"}}>
-          <div className="flex items-center gap-3">
-            <span className="text-2xl">🎧</span>
-            <div>
-              <p className="text-sm font-semibold" style={{color:WHITE}}>Audio con práctica guiada</p>
-              <p className="text-xs" style={{color:MUTED}}>{mod.time} · incluye ejercicio en vivo</p>
-            </div>
-          </div>
-        </button>
+      {/* Tabs de secciones */}
+      <div className="flex gap-1.5 px-6 mb-4 overflow-x-auto">
+        {content.sections.map((s,i) => (
+          <button key={i} onClick={() => setSec(i)}
+            className="text-xs px-2.5 py-1 rounded-full flex-shrink-0"
+            style={{background:i===sec?`${accent}20`:SURFACE,color:i===sec?accent:MUTED,border:`1px solid ${i===sec?accent+"40":BORDER}`,cursor:"pointer"}}>
+            {s.label}
+          </button>
+        ))}
+      </div>
 
-        <button onClick={onComplete}
-          className="w-full py-4 rounded-2xl font-semibold text-sm"
-          style={{background:`${accent}15`,color:accent,border:`1px solid ${accent}30`,cursor:"pointer"}}>
-          ✓ Marcar como completado
-        </button>
+      {/* Contenido */}
+      <div className="px-6">
+        <p className="text-xs font-bold mb-2" style={{color:accent,letterSpacing:"1px"}}>{section.label}</p>
+        <h2 className="font-bold mb-5 leading-tight" style={{fontSize:19,color:WHITE,fontFamily:"'Georgia',serif"}}>{section.title}</h2>
+        {renderSection(section.body, accent)}
+      </div>
+
+      {/* Navegación */}
+      <div className="px-6 pt-4 flex gap-3">
+        {sec>0 && <button onClick={() => setSec(i=>i-1)} className="px-5 py-4 rounded-2xl text-sm" style={{background:SURFACE,color:MUTED,border:"none",cursor:"pointer"}}>←</button>}
+        {sec<content.sections.length-1
+          ? <button onClick={() => setSec(i=>i+1)} className="flex-1 py-4 rounded-2xl font-semibold text-sm" style={{background:accent,color:"#080E18",cursor:"pointer",border:"none"}}>Continuar →</button>
+          : <button onClick={() => { onComplete(); onBack(); }} className="flex-1 py-4 rounded-2xl font-semibold text-sm" style={{background:accent,color:"#080E18",cursor:"pointer",border:"none"}}>Completar módulo ✦</button>
+        }
       </div>
     </div>
   );
-
-  if (mode === "read") {
-    const section = content.sections[sec];
-    return (
-      <div ref={scrollRef} className="flex-1 overflow-y-auto pb-6">
-        <div className="flex items-center justify-between px-6 pt-12 pb-4 flex-shrink-0">
-          <button onClick={() => setMode(null)} className="flex items-center gap-1.5 text-xs"
-            style={{color:MUTED,background:"none",border:"none",cursor:"pointer"}}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg>
-            Módulo {moduleNum}
-          </button>
-          <span className="text-xs" style={{color:MUTED}}>{sec+1}/{content.sections.length}</span>
-        </div>
-        <div className="px-6 mb-3">
-          <div className="h-1 rounded-full overflow-hidden" style={{background:DIM}}>
-            <div className="h-full rounded-full transition-all duration-500"
-              style={{width:`${((sec+1)/content.sections.length)*100}%`,background:accent}}/>
-          </div>
-        </div>
-        <div className="flex gap-1.5 px-6 mb-4 overflow-x-auto">
-          {content.sections.map((s,i) => (
-            <button key={i} onClick={() => { setSec(i); }}
-              className="text-xs px-2.5 py-1 rounded-full flex-shrink-0"
-              style={{background:i===sec?`${accent}20`:SURFACE,color:i===sec?accent:MUTED,border:`1px solid ${i===sec?accent+"40":BORDER}`,cursor:"pointer"}}>
-              {s.label}
-            </button>
-          ))}
-        </div>
-        <div className="px-6">
-          <p className="text-xs font-bold mb-2" style={{color:accent,letterSpacing:"1px"}}>{section.label}</p>
-          <h2 className="font-bold mb-5 leading-tight" style={{fontSize:19,color:WHITE,fontFamily:"'Georgia',serif"}}>{section.title}</h2>
-          {renderSection(section.body, accent)}
-        </div>
-        <div className="px-6 pt-4 flex gap-3">
-          {sec>0 && <button onClick={() => setSec(i=>i-1)} className="px-5 py-4 rounded-2xl text-sm" style={{background:SURFACE,color:MUTED,border:"none",cursor:"pointer"}}>←</button>}
-          {sec<content.sections.length-1
-            ? <button onClick={() => setSec(i=>i+1)} className="flex-1 py-4 rounded-2xl font-semibold text-sm" style={{background:accent,color:"#080E18",cursor:"pointer",border:"none"}}>Continuar →</button>
-            : <button onClick={() => { onComplete(); setMode(null); }} className="flex-1 py-4 rounded-2xl font-semibold text-sm" style={{background:accent,color:"#080E18",cursor:"pointer",border:"none"}}>Completar módulo ✦</button>
-          }
-        </div>
-      </div>
-    );
-  }
-
-  if (mode === "audio") {
-    const audioUrl = DRIVE_AUDIO[moduleNum];
-    return (
-      <div className="flex-1 overflow-y-auto pb-6">
-        <div className="flex items-center justify-between px-6 pt-12 pb-6">
-          <button onClick={() => setMode(null)} className="flex items-center gap-1.5 text-xs"
-            style={{color:MUTED,background:"none",border:"none",cursor:"pointer"}}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg>
-            Módulo {moduleNum}
-          </button>
-          <span className="text-xs" style={{color:MUTED}}>🎧 {mod.time}</span>
-        </div>
-        <div className="px-6 mb-5">
-          {audioUrl ? (
-            <AudioPlayer
-              url={audioUrl}
-              accent={accent}
-              title={mod.title}
-              subtitle={`Módulo ${moduleNum} · incluye práctica guiada`}
-            />
-          ) : (
-            <div className="rounded-2xl p-6 text-center" style={{background:`${accent}10`,border:`1px solid ${accent}25`}}>
-              <p className="text-2xl mb-3">🎙️</p>
-              <p className="text-sm font-semibold mb-2" style={{color:WHITE}}>Audio en preparación</p>
-              <p className="text-xs leading-relaxed" style={{color:MUTED}}>
-                Este módulo requiere una grabación especial — lenta y pausada — para acompañar la práctica de elongación consciente. Estará disponible pronto.
-              </p>
-            </div>
-          )}
-        </div>
-        <div className="px-6">
-          <div className="rounded-2xl p-4 mb-4" style={{background:SURFACE,border:`1px solid ${BORDER}`}}>
-            <p className="text-xs font-bold mb-2" style={{color:accent,letterSpacing:"1px"}}>SOBRE ESTE AUDIO</p>
-            <p className="text-xs leading-relaxed" style={{color:MUTED}}>
-              El audio incluye la explicación del módulo, momentos de pausa para practicar, y una práctica guiada al final. Podés escucharlo mientras caminás, hacés elongación, o en un momento tranquilo.
-            </p>
-          </div>
-          <button onClick={() => { onComplete(); setMode(null); }} className="w-full py-4 rounded-2xl font-semibold text-sm"
-            style={{background:`${accent}15`,color:accent,border:`1px solid ${accent}30`,cursor:"pointer"}}>
-            ✓ Marcar como completado
-          </button>
-        </div>
-      </div>
-    );
-  }
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -5233,26 +5152,27 @@ function PillarView({ pillarId, user, onBack, onSelectModule }) {
                   style={{background:isDone?`${p.color}25`:isActive?`${p.color}20`:DIM, color:isDone||isActive?p.color:MUTED}}>
                   {isDone?"✓":isLocked?"🔒":num}
                 </div>
-                <div className="flex-1" style={{minWidth:0}}>
+                <div style={{flex:1, minWidth:0}}>
                   <p className="text-sm font-semibold leading-tight mb-1" style={{color:isLocked?MUTED:WHITE}}>{mod.title}</p>
                   <p className="text-xs" style={{color:MUTED}}>🎧 {mod.time}</p>
                 </div>
-                {isActive && <span className="text-xs px-2 py-0.5 rounded-full font-bold mr-1" style={{background:`${p.color}20`,color:p.color,flexShrink:0}}>Ahora</span>}
-                {/* Botones 📖 🎧 */}
-                {!isLocked && (
-                  <div style={{display:"flex", gap:6, flexShrink:0}}>
-                    <button onClick={() => onSelectModule(num, "read")}
-                      style={{width:34,height:34,borderRadius:9,background:`${p.color}15`,border:`1px solid ${p.color}30`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,cursor:"pointer"}}>
-                      📖
-                    </button>
-                    {DRIVE_AUDIO[num] && (
-                      <button onClick={() => onSelectModule(num, "audio")}
+                <div style={{display:"flex", flexDirection:"column", alignItems:"flex-end", gap:4, flexShrink:0}}>
+                  {isActive && <span className="text-xs px-2 py-0.5 rounded-full font-bold" style={{background:`${p.color}20`,color:p.color}}>Ahora</span>}
+                  {!isLocked && (
+                    <div style={{display:"flex", gap:6}}>
+                      <button onClick={() => onSelectModule(num, "read")}
                         style={{width:34,height:34,borderRadius:9,background:`${p.color}15`,border:`1px solid ${p.color}30`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,cursor:"pointer"}}>
-                        🎧
+                        📖
                       </button>
-                    )}
-                  </div>
-                )}
+                      {DRIVE_AUDIO[num] && (
+                        <button onClick={() => onSelectModule(num, "audio")}
+                          style={{width:34,height:34,borderRadius:9,background:`${p.color}15`,border:`1px solid ${p.color}30`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,cursor:"pointer"}}>
+                          🎧
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           );
