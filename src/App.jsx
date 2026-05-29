@@ -4651,19 +4651,17 @@ function ExplorarView({ user, onBack }) {
               </div>
             </button>
 
-            {/* Botón audio — solo si tiene audio */}
-            {DRIVE_AUDIO[item.id] && (
-              <button onClick={() => { setAutoPlay(true); setItemActivo(item); }}
-                style={{
-                  width: 44, height: 44, borderRadius: 12, flexShrink: 0,
-                  background: `${item.color}20`,
-                  border: `1px solid ${item.color}40`,
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  fontSize: 18, cursor: "pointer",
-                }}>
-                🎧
-              </button>
-            )}
+            {/* Botón audio */}
+            <button onClick={() => { setAutoPlay(true); setItemActivo(item); }}
+              style={{
+                width: 44, height: 44, borderRadius: 12, flexShrink: 0,
+                background: `${item.color}20`,
+                border: `1px solid ${item.color}40`,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                fontSize: 18, cursor: "pointer",
+              }}>
+              🎧
+            </button>
           </div>
         ))}
       </div>
