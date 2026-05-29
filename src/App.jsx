@@ -4608,60 +4608,66 @@ function ExplorarView({ user, onBack }) {
 
       {/* Grid de piezas */}
       <div style={{ padding: "0 24px", display: "flex", flexDirection: "column", gap: 12 }}>
-        {EXPLORAR_ITEMS.map(item => (
+        {EXPLORAR_ITEMS.map((item, idx) => (
           <div key={item.id} style={{
-            width: "100%", padding: "16px",
+            width: "100%", padding: "14px 16px",
             borderRadius: 16,
             border: `1px solid ${item.color}25`,
             background: `${item.color}06`,
             display: "flex", alignItems: "center", gap: 14,
-            boxSizing: "border-box", overflow: "visible",
+            boxSizing: "border-box",
           }}>
-            {/* Info — click abre lectura */}
-            <button onClick={() => { setAutoPlay(false); setItemActivo(item); }}
-              style={{ flex: 1, minWidth: 0, maxWidth: "calc(100% - 58px)", background: "none", border: "none", cursor: "pointer", textAlign: "left", padding: 0, display: "flex", alignItems: "center", gap: 14 }}>
-              <div style={{
-                width: 48, height: 48, borderRadius: 12, flexShrink: 0,
-                background: `${item.color}18`,
-                display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: 20,
-              }}>
-                📖
-              </div>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <p style={{ fontSize: 15, fontWeight: 600, color: WHITE, margin: "0 0 3px", fontFamily: "system-ui" }}>
-                  {item.titulo}
-                </p>
-                <p style={{ fontSize: 11, color: MUTED, margin: "0 0 6px", fontFamily: "system-ui" }}>
-                  {item.categoria}
-                </p>
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <span style={{
-                    fontSize: 10, color: item.color,
-                    padding: "2px 8px", borderRadius: 10,
-                    background: `${item.color}15`,
-                    fontFamily: "system-ui", fontWeight: 600,
-                  }}>
-                    📖 {item.tiempo}
-                  </span>
-                  <span style={{ fontSize: 10, color: MUTED, fontFamily: "system-ui" }}>
-                    {item.paginas.length} páginas
-                  </span>
-                </div>
-              </div>
-            </button>
+            {/* Número */}
+            <div style={{
+              width: 40, height: 40, borderRadius: 10, flexShrink: 0,
+              background: `${item.color}18`,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: 15, fontWeight: 700, color: item.color, fontFamily: "system-ui",
+            }}>
+              {idx + 1}
+            </div>
 
-            {/* Botón audio */}
-            <button onClick={() => { setAutoPlay(true); setItemActivo(item); }}
-              style={{
-                width: 44, height: 44, borderRadius: 12, flexShrink: 0,
-                background: `${item.color}20`,
-                border: `1px solid ${item.color}40`,
-                display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: 18, cursor: "pointer",
+            {/* Info */}
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <p style={{ fontSize: 15, fontWeight: 600, color: WHITE, margin: "0 0 2px", fontFamily: "system-ui" }}>
+                {item.titulo}
+              </p>
+              <p style={{ fontSize: 11, color: MUTED, margin: "0 0 4px", fontFamily: "system-ui" }}>
+                {item.categoria}
+              </p>
+              <span style={{
+                fontSize: 10, color: item.color,
+                padding: "2px 8px", borderRadius: 10,
+                background: `${item.color}15`,
+                fontFamily: "system-ui", fontWeight: 600,
               }}>
-              🎧
-            </button>
+                {item.tiempo} · {item.paginas.length} páginas
+              </span>
+            </div>
+
+            {/* Botones */}
+            <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
+              <button onClick={() => { setAutoPlay(false); setItemActivo(item); }}
+                style={{
+                  width: 36, height: 36, borderRadius: 10,
+                  background: `${item.color}15`,
+                  border: `1px solid ${item.color}30`,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  fontSize: 15, cursor: "pointer",
+                }}>
+                📖
+              </button>
+              <button onClick={() => { setAutoPlay(true); setItemActivo(item); }}
+                style={{
+                  width: 36, height: 36, borderRadius: 10,
+                  background: `${item.color}15`,
+                  border: `1px solid ${item.color}30`,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  fontSize: 15, cursor: "pointer",
+                }}>
+                🎧
+              </button>
+            </div>
           </div>
         ))}
       </div>
