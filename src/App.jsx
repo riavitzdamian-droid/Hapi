@@ -55,7 +55,7 @@ const MODULES = {
   8:  { title:"Visualización negativa y gratitud activa", accent:"#D4A574", time:"10 min", tags:["Premeditatio","Gap","Irvine"] },
   9:  { title:"El sistema inmune mental",                 accent:"#E07B6A", time:"11 min", tags:["Séneca","Resiliencia","Incomodidad"] },
   10: { title:"Anti-victimización y responsabilidad",     accent:"#7ECBA1", time:"10 min", tags:["Epicteto","Tikkún","Fracaso"] },
-  11: { title:"Awe, delight y capacidad de asombro",      accent:"#6BA8D4", time:"9 min",  tags:["Irvine","Naturaleza","Delight"] },
+  11: { title:"Asombro, delight y capacidad de asombro",      accent:"#6BA8D4", time:"9 min",  tags:["Irvine","Naturaleza","Delight"] },
   12: { title:"Vivir el presente — la última vez",        accent:"#9B8EC4", time:"8 min",  tags:["Impermanencia","Irvine","Piloto auto"] },
   13: { title:"El mapa de equilibrio — 7 dimensiones",   accent:"#C4A882", time:"10 min", tags:["Sabán","Árbol de vida","Chequeo"] },
   14: { title:"Materia, generosidad y límites",           accent:"#B8956A", time:"9 min",  tags:["Séneca","Límites","Generosidad"] },
@@ -1175,7 +1175,7 @@ const MODULE_CONTENT = {
   { time: "2:00 – 5:00", title: "La trampa y la distinción", text: "El cerebro tiene una tendencia natural a buscar culpables externos. Si el problema está afuera, no hay responsabilidad, no hay incomodidad, no hay necesidad de cambiar nada.\n\nEn el corto plazo, eso se siente como alivio. En el largo plazo, el costo es enorme.\n\nPero hay una distinción crítica que mucha gente confunde:\n\nCulpa y responsabilidad no son lo mismo.\n\nLa culpa paraliza. Mira al pasado. Genera vergüenza. Drena energía. 'Soy un fracaso.'\n\nLa responsabilidad empodera. Mira al futuro. Genera aprendizaje. Devuelve control. '¿Qué puedo hacer con esto?'\n\nEl movimiento no es de 'soy culpable' a 'no soy culpable'. Es de '¿de quién es la culpa?' a '¿qué puedo hacer ahora?'\n\nEse desplazamiento — de una pregunta a otra — lo cambia todo.\n\nEpicteto lo decía así: no nos afecta lo que sucede, sino la interpretación que hacemos de lo que sucede. Y la interpretación es siempre nuestra." },
   { time: "5:00 – 7:30", title: "El lenguaje y el fracaso", text: "Hay frases que usamos en automático que refuerzan la posición de víctima cada vez que las decimos.\n\n'Me arruinaron el día.' 'Por culpa de X no pude hacer Y.' 'Siempre me pasa esto a mí.'\n\nEl lenguaje no solo describe la realidad — la construye. Cada vez que usás esas frases, le estás diciendo al sistema nervioso que el control está afuera.\n\nEl reencuadre no es forzado ni positivo. Es preciso. '¿Qué parte de esto depende de mí? ¿Aunque sea mínima?'\n\nEse margen siempre existe. Y en ese margen vive todo el poder personal.\n\nY frente al fracaso — el movimiento es el mismo. El fracaso como identidad paraliza: 'soy un fracaso'. El fracaso como información moviliza: 'esto no funcionó. ¿Qué aprendo? ¿Cómo ajusto?'\n\nLa verdadera autoconfianza no viene de que todo salga bien. Viene de la evidencia acumulada de que podés atravesar lo difícil y seguir. Eso solo se construye enfrentando cosas que salen mal." },
   { time: "7:30 – 9:00", title: "Práctica guiada", text: "Pensá en una situación actual — trabajo, un vínculo, algo que no salió — donde sentís que el problema está principalmente afuera.\n\n[pausa — 8 seg]\n\nAhora, sin negar lo que pasó, preguntate: ¿hay alguna parte de esto que depende de mí? ¿Aunque sea pequeña?\n\n[pausa — 10 seg]\n\nNo busques el 100%. Buscá el margen real. El paso más pequeño que podés dar desde acá.\n\n[pausa — 10 seg]\n\nAhora el lenguaje: ¿cómo describís esta situación normalmente? ¿Hay alguna frase que usás que ceda poder hacia afuera?\n\n[pausa — 8 seg]\n\nReencuadrá. No para negarla — para verla desde un lugar que te deje con más movimiento.\n\n[pausa — 10 seg]\n\nY la última pregunta: ¿hay algún patrón en tu vida donde esto se repite? ¿Qué dice ese patrón sobre vos — no sobre los demás?\n\n[pausa larga — 12 seg]" },
-  { time: "9:00 – 10:00", title: "Cierre", text: "Recuperar el poder personal no es negar lo que pasó.\n\nEs elegir no quedar atrapado en ello. Esa elección — tomada una y otra vez — construye una forma de vivir que ninguna circunstancia externa puede quitarte.\n\nEl próximo módulo cierra el Pilar II y abre el Pilar III: el awe, el delight y la capacidad de asombro. Después de trabajar la fortaleza y la responsabilidad, viene el polo positivo — entrenar la percepción para ver más de lo que ya está ahí.\n\nPrimero la fortaleza. Después la apertura. El orden importa." },
+  { time: "9:00 – 10:00", title: "Cierre", text: "Recuperar el poder personal no es negar lo que pasó.\n\nEs elegir no quedar atrapado en ello. Esa elección — tomada una y otra vez — construye una forma de vivir que ninguna circunstancia externa puede quitarte.\n\nEl próximo módulo cierra el Pilar II y abre el Pilar III: el asombro, el delight y la capacidad de asombro. Después de trabajar la fortaleza y la responsabilidad, viene el polo positivo — entrenar la percepción para ver más de lo que ya está ahí.\n\nPrimero la fortaleza. Después la apertura. El orden importa." },
 ] },
   11: { sections: [
   {
@@ -1191,15 +1191,15 @@ const MODULE_CONTENT = {
   },
   {
     id: "ciencia",
-    label: "LA CIENCIA DEL AWE",
+    label: "LA CIENCIA DEL ASOMBRO",
     title: "Por qué el asombro cambia el cerebro — y el cuerpo",
     body: [
-      { type: "p", text: "El awe — ese estado de admiración que aparece ante algo vasto, bello o incomprensible — tiene efectos fisiológicos medibles. No es solo una experiencia estética." },
-      { type: "block", label: "Lo que el awe produce en el sistema", items: [
-        { arrow: true, bold: "Reduce el ego:", text: " las experiencias de awe disminuyen el autoenfoque. El problema que ocupaba toda la pantalla mental de repente se vuelve pequeño frente a algo más grande." },
+      { type: "p", text: "El asombro — ese estado de admiración que aparece ante algo vasto, bello o incomprensible — tiene efectos fisiológicos medibles. No es solo una experiencia estética." },
+      { type: "block", label: "Lo que el asombro produce en el sistema", items: [
+        { arrow: true, bold: "Reduce el ego:", text: " las experiencias de asombro disminuyen el autoenfoque. El problema que ocupaba toda la pantalla mental de repente se vuelve pequeño frente a algo más grande." },
         { arrow: true, bold: "Baja el cortisol:", text: " la contemplación de naturaleza y belleza activa el sistema nervioso parasimpático. El mismo efecto que produce la meditación, sin la misma técnica." },
-        { arrow: true, bold: "Genera conexión:", text: " el awe activa el sentido de pertenencia a algo mayor. Marco Aurelio lo llamaba 'la simpatía de todas las cosas' — la sensación de que somos parte de un todo coherente." },
-        { arrow: true, bold: "Interrumpe la rumiación:", text: " es difícil estar simultáneamente maravillado y atrapado en pensamientos negativos repetitivos. El awe ocupa el mismo espacio mental que la preocupación — y lo desplaza." },
+        { arrow: true, bold: "Genera conexión:", text: " el asombro activa el sentido de pertenencia a algo mayor. Marco Aurelio lo llamaba 'la simpatía de todas las cosas' — la sensación de que somos parte de un todo coherente." },
+        { arrow: true, bold: "Interrumpe la rumiación:", text: " es difícil estar simultáneamente maravillado y atrapado en pensamientos negativos repetitivos. El asombro ocupa el mismo espacio mental que la preocupación — y lo desplaza." },
       ]},
       { type: "tip", label: "Lo que Marco Aurelio sabía", text: "Las Meditaciones están llenas de instrucciones para contemplar la naturaleza y el cosmos. No como escapismo — como herramienta de perspectiva. El problema cotidiano se vuelve más pequeño cuando uno contempla algo más grande que sí mismo. Eso era práctica diaria, no filosofía abstracta." },
     ]
@@ -1228,7 +1228,7 @@ const MODULE_CONTENT = {
     body: [
       { type: "p", text: "Irvine va un paso más allá del delight puntual y describe lo que llama meta-delight: no solo disfrutar experiencias específicas, sino desarrollar una disposición mental que encuentra valor, belleza o disfrute en gran parte de la experiencia de estar vivo." },
       { type: "p", text: "Es un cambio de configuración mental, no de circunstancias. La vida deja de ser 'momentos buenos aislados entre estrés' y pasa a ser 'una experiencia continuamente apreciable'." },
-      { type: "tip", label: "La base neurológica", text: "La atención repetida modifica circuitos neuronales. Si entrenás gratitud, contemplación, delight y awe de forma consistente, el cerebro empieza a detectar automáticamente más cosas positivas. No porque la realidad cambie — porque cambia el filtro perceptivo. Eso es neuroplasticidad atencional en acción." },
+      { type: "tip", label: "La base neurológica", text: "La atención repetida modifica circuitos neuronales. Si entrenás gratitud, contemplación, delight y asombro de forma consistente, el cerebro empieza a detectar automáticamente más cosas positivas. No porque la realidad cambie — porque cambia el filtro perceptivo. Eso es neuroplasticidad atencional en acción." },
       { type: "p", text: "Esto combate directamente la adaptación hedónica. Cuando entrenás delight, aumenta la sensibilidad y disminuye la necesidad constante de estímulos externos para sentirse bien. El gap entre lo que tenés y lo que creés necesitar empieza a cerrarse desde adentro." },
       { type: "attributed", text: "La felicidad no depende de lo que sucede, sino de la disposición mental con la que uno lo experimenta.", author: "William B. Irvine, A Guide to the Good Life" },
     ]
@@ -1241,7 +1241,7 @@ const MODULE_CONTENT = {
       { type: "p", text: "La mente funciona según aquello que uno entrena a observar. No es metáfora — es fisiología. Las redes neuronales que se activan repetidamente se fortalecen. Las que no se usan se debilitan." },
       { type: "block", label: "La dieta atencional importa", items: [
         { arrow: true, bold: "Si consumís constantemente:", text: " conflicto, redes sociales, comparación, noticias negativas, estímulos artificiales — el cerebro se adapta a vivir en ese estado de alerta y ruido." },
-        { arrow: true, bold: "Si entrenás conscientemente:", text: " gratitud, contemplación, delight, awe, presencia, silencio — el cerebro lentamente reconfigura su modo por defecto hacia esos estados." },
+        { arrow: true, bold: "Si entrenás conscientemente:", text: " gratitud, contemplación, delight, asombro, presencia, silencio — el cerebro lentamente reconfigura su modo por defecto hacia esos estados." },
       ]},
       { type: "p", text: "Esto no es ingenuidad ni negación de la realidad. Es lo mismo que hace el atleta con su entrenamiento físico: elegir qué inputs darle al sistema de forma consistente para que produzca outputs distintos." },
       { type: "tip", label: "La conexión con la naturaleza", text: "Caminar descalzo, contemplar árboles, ver el mar, escuchar pájaros, exponerse a luz natural — no son lujos poéticos. Son formas de recalibración biológica documentadas. Bajan cortisol, reducen hiperestimulación, mejoran claridad mental y regulan el sistema nervioso. Huberman lo documenta. Los estoicos lo practicaban. Es lo mismo dicho con distinto lenguaje." },
@@ -1264,8 +1264,8 @@ const MODULE_CONTENT = {
         { arrow: true, bold: "", text: "Vivirla con atención plena y apreciación deliberada. Preguntarte: ¿qué tiene de valioso esto que normalmente ignoro?" },
         { arrow: true, bold: "", text: "No forzar entusiasmo. Solo permitir que lo que ya está ahí llegue más lejos." },
       ]},
-      { type: "block", label: "3. Ancla de awe diaria", items: [
-        { arrow: true, bold: "", text: "Una vez al día, buscar conscientemente algo que genere awe — algo vasto, bello o que te recuerde que sos parte de algo más grande." },
+      { type: "block", label: "3. Ancla de asombro diaria", items: [
+        { arrow: true, bold: "", text: "Una vez al día, buscar conscientemente algo que genere asombro — algo vasto, bello o que te recuerde que sos parte de algo más grande." },
         { arrow: true, bold: "", text: "Puede ser pequeño: la textura de la luz al atardecer, el sonido de la ciudad desde lejos, el cielo en cualquier estado." },
         { arrow: true, bold: "", text: "Tres respiraciones lentas frente a eso. Eso es todo. Repetido todos los días, cambia el cerebro." },
       ]},
@@ -1278,7 +1278,7 @@ const MODULE_CONTENT = {
     title: "Preguntas para tu diario",
     body: [
       { type: "checks", items: [
-        "¿Hubo algún momento hoy donde experimenté algo cercano al awe o al delight — aunque sea pequeño?",
+        "¿Hubo algún momento hoy donde experimenté algo cercano al asombro o al delight — aunque sea pequeño?",
         "¿Qué experiencias cotidianas estoy ignorando que podrían ser fuente de disfrute si les prestara más atención?",
         "¿Qué estoy consumiendo mentalmente que entrena mi cerebro hacia el ruido en lugar de hacia la presencia?",
         "¿Hay algo en tu entorno inmediato que antes te generaba admiración y ahora ignorás por costumbre?",
@@ -1288,9 +1288,9 @@ const MODULE_CONTENT = {
     ]
   },
 ], audio: [
-  { time: "0:00 – 1:30", title: "Apertura del Pilar III", text: "Llegamos al tercer pilar.\n\nLos dos anteriores trabajaron la base y el entrenamiento: el cuerpo, la mente, la fortaleza, la responsabilidad.\n\nEste pilar trabaja algo diferente. No cómo resistir mejor ni cómo pensar más claro. Sino cómo percibir más. Cómo volver a sentir el peso de lo que ya está ahí.\n\nComienza acá, con la práctica del awe." },
+  { time: "0:00 – 1:30", title: "Apertura del Pilar III", text: "Llegamos al tercer pilar.\n\nLos dos anteriores trabajaron la base y el entrenamiento: el cuerpo, la mente, la fortaleza, la responsabilidad.\n\nEste pilar trabaja algo diferente. No cómo resistir mejor ni cómo pensar más claro. Sino cómo percibir más. Cómo volver a sentir el peso de lo que ya está ahí.\n\nComienza acá, con la práctica del asombro." },
   { time: "1:30 – 4:00", title: "El cerebro que se acostumbra", text: "Hubo un momento en tu vida en que ver el cielo estrellado te detuvo. O el mar. O la lluvia.\n\nEn algún punto, eso dejó de detenerte. No porque desapareciera — sino porque el cerebro aprendió a ignorarlo.\n\nSe llama adaptación perceptiva. El sistema nervioso, para ahorrar energía, deja de procesar lo que clasifica como 'conocido'.\n\nLo extraordinario se vuelve fondo.\n\nY lo que era fuente de asombro se vuelve ruido.\n\nWilliam Irvine habla del delight: no como euforia, sino como la capacidad de encontrar disfrute genuino en lo simple. Marco Aurelio lo llamó contemplación. La neurociencia lo llama regulación atencional.\n\nTodos hablan de lo mismo: entrenar la percepción para ver más de lo que ya está." },
-  { time: "4:00 – 6:30", title: "El entrenamiento", text: "La mente funciona según lo que uno entrena a observar. Si consumís constantemente conflicto, comparación y estímulos artificiales, el cerebro aprende a vivir en ese estado.\n\nPero si entrenás gratitud, contemplación, delight y awe de forma consistente, el cerebro lentamente reconfigura su modo por defecto.\n\nNo porque la realidad cambie. Porque cambia el filtro perceptivo.\n\nEso es lo que Irvine llama meta-delight: no momentos de disfrute — una disposición mental que encuentra valor en gran parte de la experiencia de estar vivo.\n\nLa vida deja de ser 'momentos buenos aislados entre estrés' y pasa a ser 'una experiencia continuamente apreciable'.\n\nTres respiraciones. Un árbol. El sol en la cara. Prestado de verdad, no de paso.\n\nEso, todos los días, cambia el cerebro." },
+  { time: "4:00 – 6:30", title: "El entrenamiento", text: "La mente funciona según lo que uno entrena a observar. Si consumís constantemente conflicto, comparación y estímulos artificiales, el cerebro aprende a vivir en ese estado.\n\nPero si entrenás gratitud, contemplación, delight y asombro de forma consistente, el cerebro lentamente reconfigura su modo por defecto.\n\nNo porque la realidad cambie. Porque cambia el filtro perceptivo.\n\nEso es lo que Irvine llama meta-delight: no momentos de disfrute — una disposición mental que encuentra valor en gran parte de la experiencia de estar vivo.\n\nLa vida deja de ser 'momentos buenos aislados entre estrés' y pasa a ser 'una experiencia continuamente apreciable'.\n\nTres respiraciones. Un árbol. El sol en la cara. Prestado de verdad, no de paso.\n\nEso, todos los días, cambia el cerebro." },
   { time: "6:30 – 8:00", title: "Práctica guiada", text: "Hacemos la práctica ahora.\n\nDonde estés, buscá algo en tu entorno que puedas observar. Un objeto, la luz que entra, el cielo si podés verlo, cualquier cosa que esté frente a vos.\n\n[pausa — 5 seg]\n\nAhora observalo como si fuera la primera vez que lo ves. Sin nombre, sin categoría. Solo la forma, la textura, el color, la luz.\n\n[pausa — 12 seg]\n\nCuando la mente se fue — y se fue — volvé. Sin drama.\n\n[pausa — 8 seg]\n\nTres respiraciones lentas. Con cada exhalación, aflojá un poco más.\n\n[pausa — 15 seg]\n\nAhora una pregunta: ¿cuándo fue la última vez que algo te detuvo genuinamente — no por impacto, sino por belleza?\n\n[pausa larga — 12 seg]" },
   { time: "8:00 – 9:00", title: "Cierre", text: "El asombro no requiere viajes ni eventos extraordinarios.\n\nRequiere atención. Y la atención, a diferencia de las circunstancias, siempre está disponible.\n\nEl próximo módulo lleva esto un paso más lejos: la técnica estoica de 'puede ser la última vez'. No para pensar en la muerte — sino para romper el piloto automático y volver a vivir lo cotidiano con intensidad real.\n\nPrimero el asombro. Después la impermanencia. La secuencia transforma todo." },
 ] },
@@ -2063,7 +2063,7 @@ const MODULE_CONTENT = {
 ], audio: [
   { time: "0:00 – 2:00", title: "El último módulo", text: "Este es el módulo 18. El último.\n\nNo el final — el punto de integración. El lugar donde todo lo que se trabajó en los 17 módulos anteriores encuentra su por qué.\n\nViktor Frankl observó algo que los campos de concentración nazis pusieron en evidencia de la forma más brutal posible: las personas que sobrevivían no eran necesariamente las más fuertes. Eran las que tenían un por qué.\n\nQuien tiene un por qué para vivir puede soportar casi cualquier cómo.\n\nEse es el territorio de este módulo. El propósito — no como destino que se alcanza, sino como dirección que orienta." },
   { time: "2:00 – 4:30", title: "La búsqueda y los obstáculos", text: "El propósito no se encuentra. Se construye.\n\nSe construye viviendo con atención, notando qué activa algo genuino, haciéndose las preguntas correctas. La búsqueda misma ya es parte del propósito. No hay un momento en que 'ya lo encontraste' y deja de haber trabajo.\n\nY los obstáculos — los estoicos lo sabían, la Kabbalah lo enseña, Frankl lo vivió — no son interrupciones del camino. Son parte del camino.\n\nHay dos preguntas disponibles ante cualquier dificultad. La primera: ¿por qué me pasa esto? Esa lleva hacia la victimización, la búsqueda de culpables, el resentimiento.\n\nLa segunda: ¿qué hay acá para aprender? Esa lleva hacia el crecimiento, la acción, la recuperación del poder.\n\nLa vida no te pasa. Te entrena. Cada obstáculo es una invitación a aprender algo que todavía no sabías sobre vos." },
-  { time: "4:30 – 7:00", title: "El sistema integrado", text: "Los 5 pilares que construiste a lo largo de hapi no son partes separadas. Se sostienen entre sí.\n\nEl Pilar I — el cuerpo — le da energía a todo lo demás. Sin sueño, sin movimiento, sin alimentación consciente, el propósito queda sin combustible.\n\nEl Pilar II — la mente entrenada — le da resiliencia. Sin el filtro estoico, sin el sistema inmune mental, el propósito se pierde ante la primera dificultad real.\n\nEl Pilar III — la conciencia — le da presencia. Sin awe, sin delight, sin la práctica de la última vez, el propósito se persigue en automático sin vivirlo.\n\nEl Pilar IV — el equilibrio — le da sostenibilidad. Sin las 7 dimensiones en balance, el propósito en un área destruye las demás.\n\nY el Pilar V — las relaciones — le da contexto. El propósito solitario es frágil. El propósito compartido, construido desde la plenitud, se fortalece.\n\nEl propósito no reemplaza el trabajo de los otros pilares. Les da sentido." },
+  { time: "4:30 – 7:00", title: "El sistema integrado", text: "Los 5 pilares que construiste a lo largo de hapi no son partes separadas. Se sostienen entre sí.\n\nEl Pilar I — el cuerpo — le da energía a todo lo demás. Sin sueño, sin movimiento, sin alimentación consciente, el propósito queda sin combustible.\n\nEl Pilar II — la mente entrenada — le da resiliencia. Sin el filtro estoico, sin el sistema inmune mental, el propósito se pierde ante la primera dificultad real.\n\nEl Pilar III — la conciencia — le da presencia. Sin asombro, sin delight, sin la práctica de la última vez, el propósito se persigue en automático sin vivirlo.\n\nEl Pilar IV — el equilibrio — le da sostenibilidad. Sin las 7 dimensiones en balance, el propósito en un área destruye las demás.\n\nY el Pilar V — las relaciones — le da contexto. El propósito solitario es frágil. El propósito compartido, construido desde la plenitud, se fortalece.\n\nEl propósito no reemplaza el trabajo de los otros pilares. Les da sentido." },
   { time: "7:00 – 9:30", title: "Práctica guiada — manifiesto", text: "Cinco preguntas. Tomá el tiempo que necesitás con cada una.\n\n¿Qué tipo de persona querés ser? No qué querés lograr — qué cualidades querés encarnar.\n\n[pausa — 12 seg]\n\n¿Qué es lo que más importa proteger en tu vida?\n\n[pausa — 10 seg]\n\n¿Qué tipo de contribución querés hacer — en cualquier escala?\n\n[pausa — 10 seg]\n\n¿Qué patrón querés romper? Lo que aprendiste sobre vos en estos 18 módulos que ya no querés seguir repitiendo.\n\n[pausa — 12 seg]\n\n¿Cómo querés que se sienta una semana bien vivida? No qué querés haber logrado — cómo querés haberte sentido.\n\n[pausa larga — 15 seg]\n\nEsas respuestas son tu manifiesto. No importa que todavía no estén escritas. Ya están adentro." },
   { time: "9:30 – 11:00", title: "Cierre del sistema", text: "18 módulos. 5 pilares.\n\nUn sistema que no prescribe cómo vivir sino que ayuda a descubrir la propia forma de hacerlo.\n\nLo que hapi construyó no es una lista de hábitos. Es una forma de mirar. Una disposición a observar, a preguntar, a ajustar.\n\nEl sistema no termina acá. Se reinicia. Los módulos se vuelven a leer con otra mirada cuando uno tiene más experiencia. Las prácticas se profundizan. Las preguntas generan respuestas distintas con el tiempo.\n\nY hay una sola pregunta para llevar de aquí en adelante:\n\n¿Lo que hago hoy está alineado con quien quiero ser?\n\nNo como exigencia. Como brújula.\n\nEso — la calidad de la presencia con que vivís cada día — es lo único que realmente construye algo que dura.\n\n[pausa larga]\n\nGracias por haber llegado hasta acá." },
 ] },
@@ -2976,9 +2976,9 @@ function ModulePlayer({ moduleNum, onBack, onComplete }) {
           {renderSection(section.body, accent)}
         </div>
         <div className="px-6 pt-4 flex gap-3">
-          {sec>0 && <button onClick={() => setSec(i=>i-1)} className="px-5 py-4 rounded-2xl text-sm" style={{background:SURFACE,color:MUTED,border:"none",cursor:"pointer"}}>←</button>}
+          {sec>0 && <button onClick={() => { setSec(i=>i-1); scrollRef.current?.scrollTo({top:0,behavior:"auto"}); }} className="px-5 py-4 rounded-2xl text-sm" style={{background:SURFACE,color:MUTED,border:"none",cursor:"pointer"}}>←</button>}
           {sec<content.sections.length-1
-            ? <button onClick={() => setSec(i=>i+1)} className="flex-1 py-4 rounded-2xl font-semibold text-sm" style={{background:accent,color:"#080E18",cursor:"pointer",border:"none"}}>Continuar →</button>
+            ? <button onClick={() => { setSec(i=>i+1); scrollRef.current?.scrollTo({top:0,behavior:"auto"}); }} className="flex-1 py-4 rounded-2xl font-semibold text-sm" style={{background:accent,color:"#080E18",cursor:"pointer",border:"none"}}>Continuar →</button>
             : <button onClick={() => { onComplete(); setMode(null); }} className="flex-1 py-4 rounded-2xl font-semibold text-sm" style={{background:accent,color:"#080E18",cursor:"pointer",border:"none"}}>Completar módulo ✦</button>
           }
         </div>
@@ -3297,6 +3297,19 @@ function TransicionFinal({ user, onEntrarMotor }) {
               <p style={{ fontSize: 13, color: "rgba(255,255,255,0.75)", margin: 0, lineHeight: 1.6, fontFamily: "system-ui" }}>{t}</p>
             </div>
           ))}
+        </div>
+
+        {/* Audio Transición */}
+        <div style={{ marginBottom: 20 }}>
+          <p style={{ fontSize: 11, letterSpacing: "2px", color: "#6BA8D4", margin: "0 0 10px", fontFamily: "system-ui", fontWeight: 600 }}>
+            ESCUCHÁ ANTES DE CONTINUAR
+          </p>
+          <AudioPlayer
+            url={DRIVE_AUDIO.transicion}
+            accent="#6BA8D4"
+            title="Transición al Motor IA"
+            subtitle="El siguiente nivel del sistema"
+          />
         </div>
 
         <button onClick={onEntrarMotor}
@@ -3752,7 +3765,7 @@ function PracticaDiaria({ rutinas, modulosSeleccionados, checkin, onVolver, onNu
   const [completada, setCompletada] = useState(false);
   const scrollRef = useRef(null);
 
-  useEffect(() => { scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" }); }, [sesionIdx, paginaIdx]);
+  useEffect(() => { scrollRef.current?.scrollTo({ top: 0, behavior: "auto" }); }, [sesionIdx, paginaIdx]);
 
   const irASesion = (idx) => {
     setSesionIdx(idx);
@@ -5404,8 +5417,8 @@ export default function HapiApp() {
 
   // ── Onboarding handlers ──────────────────────────────────────
   const current = STEPS[stepIdx];
-  const next = () => setStepIdx(i => Math.min(i + 1, STEPS.length - 1));
-  const back = () => setStepIdx(i => Math.max(i - 1, 0));
+  const next = () => { setStepIdx(i => Math.min(i + 1, STEPS.length - 1)); window.scrollTo(0, 0); };
+  const back = () => { setStepIdx(i => Math.max(i - 1, 0)); window.scrollTo(0, 0); };
   const setField = (field, val) => setAnswers(prev => ({ ...prev, [field]: val }));
 
   const onboardingProps = {
@@ -5574,7 +5587,7 @@ export default function HapiApp() {
         )}
 
         {!activeModule && !motorScreen && (
-          <BottomNav active={tab} onChange={t => { setTab(t); setSelectedPillar(null); }}/>
+          <BottomNav active={tab} onChange={t => { setTab(t); setSelectedPillar(null); window.scrollTo(0,0); }}/>
         )}
 
         {showSettings && (
