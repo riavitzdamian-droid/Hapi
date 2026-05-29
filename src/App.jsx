@@ -4615,10 +4615,11 @@ function ExplorarView({ user, onBack }) {
             border: `1px solid ${item.color}25`,
             background: `${item.color}06`,
             display: "flex", alignItems: "center", gap: 14,
+            boxSizing: "border-box", overflow: "visible",
           }}>
             {/* Info — click abre lectura */}
             <button onClick={() => { setAutoPlay(false); setItemActivo(item); }}
-              style={{ flex: 1, minWidth: 0, background: "none", border: "none", cursor: "pointer", textAlign: "left", padding: 0, display: "flex", alignItems: "center", gap: 14 }}>
+              style={{ flex: 1, minWidth: 0, maxWidth: "calc(100% - 58px)", background: "none", border: "none", cursor: "pointer", textAlign: "left", padding: 0, display: "flex", alignItems: "center", gap: 14 }}>
               <div style={{
                 width: 48, height: 48, borderRadius: 12, flexShrink: 0,
                 background: `${item.color}18`,
