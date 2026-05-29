@@ -2894,8 +2894,8 @@ function AudioPlayer({ url, accent, title, subtitle, onEnded, autoPlay = false }
 }
 
 // ─── MODULE PLAYER ────────────────────────────────────────────
-function ModulePlayer({ moduleNum, onBack, onComplete }) {
-  const [mode, setMode] = useState(null);
+function ModulePlayer({ moduleNum, onBack, onComplete, initialMode = null }) {
+  const [mode, setMode] = useState(initialMode);
   const [sec, setSec] = useState(0);
   const [audioSec, setAudioSec] = useState(0);
   const scrollRef = useRef(null);
@@ -3446,17 +3446,11 @@ function ModulosView({ user, onSelectModule, onBack }) {
                     const mod = MODULES[num];
                     const completado = user.completedModules.includes(num);
                     return (
-                      <button
-                        key={num}
-                        onClick={() => onSelectModule(num)}
-                        style={{
-                          width: "100%", padding: "13px 16px",
-                          borderBottom: i < p.modules.length - 1 ? `1px solid ${BORDER}` : "none",
-                          background: "transparent", border: "none",
-                          cursor: "pointer", textAlign: "left",
-                          display: "flex", alignItems: "center", gap: 12,
-                        }}
-                      >
+                      <div key={num} style={{
+                        padding: "13px 16px",
+                        borderBottom: i < p.modules.length - 1 ? `1px solid ${BORDER}` : "none",
+                        display: "flex", alignItems: "center", gap: 12,
+                      }}>
                         <div style={{
                           width: 28, height: 28, borderRadius: 8, flexShrink: 0,
                           background: completado ? `${p.color}25` : DIM,
@@ -3475,8 +3469,19 @@ function ModulosView({ user, onSelectModule, onBack }) {
                             {mod.time}
                           </p>
                         </div>
-                        <span style={{ color: p.color, fontSize: 16, flexShrink: 0 }}>→</span>
-                      </button>
+                        <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
+                          <button onClick={() => onSelectModule(num, "read")}
+                            style={{width:30,height:30,borderRadius:8,background:`${p.color}15`,border:`1px solid ${p.color}30`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,cursor:"pointer"}}>
+                            📖
+                          </button>
+                          {DRIVE_AUDIO[num] && (
+                            <button onClick={() => onSelectModule(num, "audio")}
+                              style={{width:30,height:30,borderRadius:8,background:`${p.color}15`,border:`1px solid ${p.color}30`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,cursor:"pointer"}}>
+                              🎧
+                            </button>
+                          )}
+                        </div>
+                      </div>
                     );
                   })}
                 </div>
@@ -5219,22 +5224,37 @@ function PillarView({ pillarId, user, onBack, onSelectModule }) {
           const isLocked = status==="locked";
           const isDone = status==="done";
           const isActive = status==="active";
+          const mod = MODULES[num];
           return (
-            <button key={num} disabled={isLocked} onClick={() => !isLocked && onSelectModule(num)}
-              className="w-full text-left mb-3 rounded-2xl p-4"
-              style={{background:isActive?`${p.color}12`:CARD,border:`1px solid ${isActive?p.color+"40":BORDER}`,cursor:isLocked?"not-allowed":"pointer",opacity:isLocked?0.4:1}}>
+            <div key={num} className="w-full mb-3 rounded-2xl p-4"
+              style={{background:isActive?`${p.color}12`:CARD, border:`1px solid ${isActive?p.color+"40":BORDER}`, opacity:isLocked?0.4:1}}>
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl flex items-center justify-center text-sm font-bold"
-                  style={{background:isDone?`${p.color}25`:isActive?`${p.color}20`:DIM,color:isDone||isActive?p.color:MUTED}}>
+                <div className="w-9 h-9 rounded-xl flex items-center justify-center text-sm font-bold flex-shrink-0"
+                  style={{background:isDone?`${p.color}25`:isActive?`${p.color}20`:DIM, color:isDone||isActive?p.color:MUTED}}>
                   {isDone?"✓":isLocked?"🔒":num}
                 </div>
-                <div className="flex-1">
-                  <p className="text-sm font-semibold leading-tight mb-1" style={{color:isLocked?MUTED:WHITE}}>{MODULES[num].title}</p>
-                  <p className="text-xs" style={{color:MUTED}}>🎧 {MODULES[num].time}</p>
+                <div className="flex-1" style={{minWidth:0}}>
+                  <p className="text-sm font-semibold leading-tight mb-1" style={{color:isLocked?MUTED:WHITE}}>{mod.title}</p>
+                  <p className="text-xs" style={{color:MUTED}}>🎧 {mod.time}</p>
                 </div>
-                {isActive && <span className="text-xs px-2 py-0.5 rounded-full font-bold" style={{background:`${p.color}20`,color:p.color}}>Ahora</span>}
+                {isActive && <span className="text-xs px-2 py-0.5 rounded-full font-bold mr-1" style={{background:`${p.color}20`,color:p.color,flexShrink:0}}>Ahora</span>}
+                {/* Botones 📖 🎧 */}
+                {!isLocked && (
+                  <div style={{display:"flex", gap:6, flexShrink:0}}>
+                    <button onClick={() => onSelectModule(num, "read")}
+                      style={{width:34,height:34,borderRadius:9,background:`${p.color}15`,border:`1px solid ${p.color}30`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,cursor:"pointer"}}>
+                      📖
+                    </button>
+                    {DRIVE_AUDIO[num] && (
+                      <button onClick={() => onSelectModule(num, "audio")}
+                        style={{width:34,height:34,borderRadius:9,background:`${p.color}15`,border:`1px solid ${p.color}30`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,cursor:"pointer"}}>
+                        🎧
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
-            </button>
+            </div>
           );
         })}
       </div>
@@ -5403,6 +5423,7 @@ export default function HapiApp() {
   const [tab, setTab] = useState("home");
   const [selectedPillar, setSelectedPillar] = useState(null);
   const [activeModule, setActiveModule] = useState(null);
+  const [activeModuleMode, setActiveModuleMode] = useState(null);
   const [user, setUser] = useState(saved?.user || {
     name: "",
     currentModule: 1,
@@ -5533,18 +5554,20 @@ export default function HapiApp() {
     }
   };
 
-  const handleSelectModule = (num) => {
+  const handleSelectModule = (num, mode = null) => {
     setActiveModule(num);
+    setActiveModuleMode(mode);
     setSelectedPillar(null);
   };
 
   const handleShowPillar = (id) => {
     setSelectedPillar(id);
     setActiveModule(null);
+    setActiveModuleMode(null);
   };
 
   const handleBack = () => {
-    if (activeModule) { setActiveModule(null); return; }
+    if (activeModule) { setActiveModule(null); setActiveModuleMode(null); return; }
     if (selectedPillar) { setSelectedPillar(null); return; }
   };
 
@@ -5621,11 +5644,11 @@ export default function HapiApp() {
         ) : motorScreen === "modulos" ? (
           <ModulosView
             user={user}
-            onSelectModule={(num) => { setActiveModule(num); setMotorScreen(null); }}
+            onSelectModule={(num, mode) => { setActiveModule(num); setActiveModuleMode(mode || null); setMotorScreen(null); }}
             onBack={() => setMotorScreen("mi_camino")}
           />
         ) : activeModule ? (
-          <ModulePlayer moduleNum={activeModule} onBack={handleBack} onComplete={() => handleComplete(activeModule)}/>
+          <ModulePlayer moduleNum={activeModule} onBack={handleBack} onComplete={() => handleComplete(activeModule)} initialMode={activeModuleMode}/>
         ) : selectedPillar && tab === "home" ? (
           <PillarView pillarId={selectedPillar} user={user} onBack={handleBack} onSelectModule={handleSelectModule}/>
         ) : tab === "home" ? (
