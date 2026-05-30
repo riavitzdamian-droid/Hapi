@@ -3753,6 +3753,73 @@ function LoadingIA({ modulosSeleccionados, progreso }) {
   );
 }
 
+// ─── ELEVENLABS PLAYER ───────────────────────────────────────
+const ELEVEN_VOICE_ID = "nC9l3CLWdcH1HrtrbZpG";
+const ELEVEN_MODEL = "eleven_multilingual_v2";
+
+function ElevenLabsPlayer({ texto, accent, label }) {
+  const [audioUrl, setAudioUrl] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+
+  const generar = async () => {
+    if (audioUrl || loading) return;
+    setLoading(true);
+    setError(false);
+    try {
+      const resp = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${ELEVEN_VOICE_ID}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "xi-api-key": import.meta.env.VITE_ELEVENLABS_KEY,
+        },
+        body: JSON.stringify({
+          text: texto,
+          model_id: ELEVEN_MODEL,
+          voice_settings: { stability: 0.45, similarity_boost: 0.75, style: 0, use_speaker_boost: true },
+        }),
+      });
+      if (!resp.ok) throw new Error("ElevenLabs error");
+      const blob = await resp.blob();
+      setAudioUrl(URL.createObjectURL(blob));
+    } catch (e) {
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (!audioUrl) {
+    return (
+      <button onClick={generar} disabled={loading}
+        style={{
+          display: "flex", alignItems: "center", gap: 8,
+          padding: "10px 14px", borderRadius: 10,
+          background: `${accent}12`, border: `1px solid ${accent}30`,
+          color: accent, fontSize: 12, cursor: loading ? "default" : "pointer",
+          fontFamily: "system-ui", fontWeight: 600, width: "100%",
+        }}>
+        {loading
+          ? <><span style={{width:13,height:13,border:`2px solid ${accent}`,borderTopColor:"transparent",borderRadius:"50%",display:"inline-block",animation:"hapiSpin 0.8s linear infinite"}}/> Generando audio...</>
+          : error
+            ? <>⚠️ Error al generar — intentá de nuevo</>
+            : <>🎧 Escuchar {label}</>
+        }
+      </button>
+    );
+  }
+
+  return (
+    <AudioPlayer
+      url={audioUrl}
+      accent={accent}
+      title={label}
+      subtitle="Generado por hapi · IA"
+      autoPlay={true}
+    />
+  );
+}
+
 // ─── PANTALLA DE PRÁCTICA GENERADA ────────────────────────────
 // ─── SESIÓN GENERADA — FORMATO 3 BLOQUES ─────────────────────
 function PracticaDiaria({ rutinas, modulosSeleccionados, checkin, onVolver, onNuevaSesion }) {
@@ -3860,6 +3927,11 @@ function PracticaDiaria({ rutinas, modulosSeleccionados, checkin, onVolver, onNu
         {/* PÁGINA 1 — Nuevo ángulo */}
         {paginaIdx === 0 && (
         <>
+        <ElevenLabsPlayer
+          texto={`${rutina.nuevo_angulo.label}.\n\n${rutina.nuevo_angulo.texto}\n\n${rutina.nuevo_angulo.idea_clave}`}
+          accent={accent}
+          label="este ángulo"
+        />
         <div style={{ borderRadius: 14, background: CARD, border: `1px solid ${BORDER}`, overflow: "hidden" }}>
           <div style={{ padding: "13px 15px", background: `linear-gradient(135deg, ${accent}12, transparent)`, borderBottom: `1px solid ${BORDER}` }}>
             <p style={{ fontSize: 9, letterSpacing: "2px", color: accent, margin: "0 0 2px", fontFamily: "system-ui", fontWeight: 600 }}>
@@ -3897,6 +3969,11 @@ function PracticaDiaria({ rutinas, modulosSeleccionados, checkin, onVolver, onNu
         {/* PÁGINA 2 — Práctica */}
         {paginaIdx === 1 && (
         <>
+        <ElevenLabsPlayer
+          texto={`${rutina.practica.titulo}.\n\n${rutina.practica.nota_variante ? rutina.practica.nota_variante + "\n\n" : ""}${rutina.practica.pasos.map((p, i) => `Paso ${i+1}: ${p}`).join("\n\n")}\n\n${rutina.practica.cierre}`}
+          accent={accent}
+          label="la práctica"
+        />
         <div style={{ borderRadius: 14, background: CARD, border: `1px solid ${BORDER}`, overflow: "hidden" }}>
           <div style={{ padding: "13px 15px", background: `linear-gradient(135deg, ${accent}10, transparent)`, borderBottom: `1px solid ${BORDER}`, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <div>
@@ -3976,6 +4053,11 @@ function PracticaDiaria({ rutinas, modulosSeleccionados, checkin, onVolver, onNu
         {/* PÁGINA 3 — Insight + Cierre */}
         {paginaIdx === 2 && (
           <>
+        <ElevenLabsPlayer
+          texto={`${rutina.insight || ""}${rutina.practica?.cierre_diferido ? "\n\nPara reflexionar en unos días: " + rutina.practica.cierre_diferido : ""}`}
+          accent={accent}
+          label="el insight"
+        />
         {/* Insight */}
         {rutina.insight && (
           <div style={{ padding: "15px 16px", borderRadius: 14, background: CARD, border: `1px solid ${BORDER}` }}>
