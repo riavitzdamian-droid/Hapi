@@ -3035,15 +3035,61 @@ ESTRUCTURA DE SALIDA — RESPONDER SOLO EN JSON VÁLIDO, SIN BACKTICKS NI TEXTO 
 }`;
 }
 
-function buildMotorUserPrompt(user, checkin, moduloNum) {
+function buildMotorUserPrompt(user, checkin, moduloNum, answers) {
   const mod = MODULES[moduloNum];
   const pillar = getPillar(moduloNum);
   const profile = user.profile || {};
+
+  const momentoLabel = {
+    crisis:    "Está atravesando algo difícil — crisis, pérdida, o algo que duele",
+    busqueda:  "Busca crecer y mejorar — todo funciona, pero hay más",
+    optimizar: "Quiere optimizar lo que ya tiene — sólido, busca el siguiente nivel",
+    curioso:   "Llegó por curiosidad — a ver de qué se trata",
+  }[answers?.momento] || profile.tono || "búsqueda personal";
+
+  const tiempoLabel = {
+    "5min":  "5 minutos — poco pero constante",
+    "15min": "15 minutos — un bloque diario",
+    "30min": "30 minutos — comprometido",
+    libre:   "Sin restricción de tiempo",
+  }[answers?.tiempo] || profile.ritmo || "15 minutos";
+
+  const estiloLabel = {
+    simple:     "Simple y directo — sin términos técnicos, con ejemplos cotidianos",
+    balanceado: "Equilibrado — conceptual pero aplicable",
+    profundo:   "Con profundidad conceptual — neurociencia, filosofía, evidencia",
+    tecnico:    "Técnico y riguroso — quiere la fuente y el mecanismo",
+  }[answers?.estilo] || profile.nivel || "balanceado";
+
+  const orientacionLabel = {
+    razon:     "Desde la razón — se guía por la lógica y la evidencia",
+    intuicion: "Desde la intuición — confía en lo que siente",
+    ambos:     "Desde los dos — según el momento usa razón o intuición",
+    buscando:  "Todavía lo está descubriendo",
+  }[answers?.orientacion] || "balance entre razón e intuición";
+
+  const edadLabel = {
+    "18-25": "18–25 años (construyendo las bases)",
+    "26-35": "26–35 años (navegando la primera adultez)",
+    "36-45": "36–45 años (en el medio del camino)",
+    "46-55": "46–55 años (revisando prioridades)",
+    "55+":   "55+ años (con perspectiva)",
+  }[answers?.edad] || answers?.edad || "no especificada";
+
+  const sexoLabel = {
+    hombre: "hombre",
+    mujer:  "mujer",
+    nd:     "prefirió no especificarlo",
+  }[answers?.sexo] || "no especificado";
+
   return `PERFIL DEL USUARIO:
-- Nombre: ${user.name || "usuario"}
-- Momento vital: ${profile.tono || "búsqueda"}
-- Tiempo disponible habitual: ${profile.ritmo || "15 minutos"}
-- Estilo de comunicación: ${profile.nivel || "balanceado"}
+- Nombre: ${user.name || answers?.nombre || "usuario"}
+- Edad: ${edadLabel}
+- Género: ${sexoLabel}
+- Momento vital: ${momentoLabel}
+- Tiempo disponible: ${tiempoLabel}
+- Estilo de comunicación preferido: ${estiloLabel}
+- Cómo procesa la vida: ${orientacionLabel}
 
 MÓDULO A INTEGRAR: ${moduloNum} — "${mod.title}"
 Pilar: ${pillar?.name || ""}
@@ -3055,7 +3101,7 @@ CHECK-IN DE HOY:
 - Foco: ${checkin.foco}
 - Intención: "${checkin.intencion || "ninguna especificada"}"
 
-Generá la sesión de integración para este usuario, en este módulo, en este momento exacto. El contenido debe sentirse nuevo — mismo módulo, otra capa.`;
+Usá el perfil completo para personalizar la sesión — el tono, los ejemplos, la profundidad y el enfoque deben reflejar quién es esta persona y desde dónde llega. Generá la sesión de integración para este usuario, en este módulo, en este momento exacto. El contenido debe sentirse nuevo — mismo módulo, otra capa.`;
 }
 
 // ─── PANTALLA DE TRANSICIÓN — FIN DEL SISTEMA ─────────────────
@@ -5391,7 +5437,7 @@ export default function HapiApp() {
             model: "claude-sonnet-4-5",
             max_tokens: 2500,
             system: buildMotorSystemPrompt(),
-            messages: [{ role: "user", content: buildMotorUserPrompt(user, checkinData, num) }],
+            messages: [{ role: "user", content: buildMotorUserPrompt(user, checkinData, num, answers) }],
           }),
         })
         .then(r => r.json())
