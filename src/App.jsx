@@ -4377,6 +4377,17 @@ function LectorPaginado({ item, onBack, autoPlay = false }) {
 
       <div style={{ padding: "0 24px", display: "flex", flexDirection: "column", gap: 16 }}>
 
+        {/* Audio — siempre visible arriba */}
+        {DRIVE_AUDIO[item.id] && (
+          <AudioPlayer
+            url={DRIVE_AUDIO[item.id]}
+            accent={item.color}
+            title={item.titulo}
+            subtitle="Escuchá el artículo completo"
+            autoPlay={autoPlay && paginaIdx === 0}
+          />
+        )}
+
         {/* Contenido de la página */}
         {!esReflexion ? (
           <div style={{
@@ -4439,22 +4450,6 @@ function LectorPaginado({ item, onBack, autoPlay = false }) {
               ))}
             </div>
           </>
-        )}
-
-        {/* Audio del artículo — aparece en la primera página */}
-        {paginaIdx === 0 && DRIVE_AUDIO[item.id] && (
-          <div style={{ marginBottom: 20 }}>
-            <p style={{ fontSize: 11, letterSpacing: "2px", color: item.color, margin: "0 0 10px", fontFamily: "system-ui", fontWeight: 600 }}>
-              ESCUCHÁ EL ARTÍCULO COMPLETO
-            </p>
-            <AudioPlayer
-              url={DRIVE_AUDIO[item.id]}
-              accent={item.color}
-              title={item.titulo}
-              subtitle="Incluye preguntas de reflexión"
-              autoPlay={autoPlay}
-            />
-          </div>
         )}
 
         {/* Navegación */}
