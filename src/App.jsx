@@ -5357,6 +5357,7 @@ export default function HapiApp() {
   // motorScreen: null | "transicion" | "mi_camino" | "checkin" | "loading" | "practica"
   const [motorScreen, setMotorScreen] = useState(null);
   const [motorModulos, setMotorModulos] = useState([]);   // lista de módulos seleccionados
+  const motorModulosRef = useRef([]);
   const [motorCheckin, setMotorCheckin] = useState(null);
   const [motorRutinas, setMotorRutinas] = useState([]);   // una rutina por módulo
   const [motorError, setMotorError] = useState(false);
@@ -5369,15 +5370,15 @@ export default function HapiApp() {
     }
   }, [screen]);
 
-  async function handleMotorGenerar(checkinData) {
+  async function handleMotorGenerar(checkinData, modulosOverride) {
+    const modulos = modulosOverride || motorModulos;
     setMotorCheckin(checkinData);
     setMotorScreen("loading");
     setMotorError(false);
     setMotorProgreso(0);
 
     try {
-      // Generar todas las sesiones en paralelo
-      const promesas = motorModulos.map(num =>
+      const promesas = modulos.map(num =>
         fetch("https://api.anthropic.com/v1/messages", {
           method: "POST",
           headers: {
@@ -5535,7 +5536,7 @@ export default function HapiApp() {
         ) : motorScreen === "mi_camino" ? (
           <MiCamino
             user={user}
-            onIniciarSesion={(modulos) => { setMotorModulos(modulos); setMotorScreen("checkin"); }}
+            onIniciarSesion={(modulos) => { setMotorModulos(modulos); motorModulosRef.current = modulos; setMotorScreen("checkin"); }}
             onBack={() => setMotorScreen(null)}
             onVerModulos={() => setMotorScreen("modulos")}
           />
@@ -5543,7 +5544,7 @@ export default function HapiApp() {
           <CheckInDia
             user={user}
             modulosSeleccionados={motorModulos}
-            onComplete={handleMotorGenerar}
+            onComplete={(checkinData) => handleMotorGenerar(checkinData, motorModulosRef.current)}
             onBack={() => setMotorScreen("mi_camino")}
           />
         ) : motorScreen === "loading" ? (
